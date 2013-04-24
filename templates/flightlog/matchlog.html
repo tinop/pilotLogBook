@@ -1,0 +1,73 @@
+{% extends "flights/base.html" %}
+
+{% block title %}Match Log{% endblock %}
+
+{% block navigation_log %}class="active"{% endblock %}
+
+{% block content_page_header %}Match Log{% endblock %}
+
+{% block content %}
+        <div class="span10 offset1">
+        {% if games_list %}
+          <table class="table table-striped table-condensed table-hover">
+            <thead>
+              <tr>
+                {% if date_title %}
+                <th>{{ date_title }} <a href="matchlog.html?page=1{{page_query_suffix}}"><i class="icon-remove-circle"></i></a></th>
+                {% else %}
+                <th>Date</th>
+                {% endif %}
+                <th>{{ opponents_title|safe }}</th>
+                <th>Winner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for game in games_list %}
+              <tr>
+                <td>{{ game.matchDate }}</td>
+                <td><a href="matchlog.html{{players_query_prefix}}{{ game.playerOne_id }}{{ranking_query}}">{{ game.playerOne.get_full_name }}</a> vs. <a href="matchlog.html{{players_query_prefix}}{{ game.playerTwo_id }}{{ranking_query}}">{{ game.playerTwo.get_full_name }}</a></td>
+                <td>{{ game.winner }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+            {% if date_title %}
+	          <p>This player did not participate during {{ date_title|lower }}.</p>
+            {% else %}
+	          <p>No games are available for this player.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if games_list.paginator.num_pages > 1 %}
+        <div class="pagination pagination-centered">
+            <ul>
+                {% if games_list.has_previous %}
+                    <li><a href="matchlog.html?page=1{{ page_query_suffix }}{{ranking_query}}"><i class="icon-fast-backward"></i></a></li>
+                    <li><a href="matchlog.html?page={{ games_list.previous_page_number }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-backward"></i></a></li>
+                {% else %}
+                    <li class="disabled"><a href="matchlog.html?page={{ games_list.number }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-fast-backward"></i></a></li>
+                    <li class="disabled"><a href="matchlog.html?page={{ games_list.number }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-backward"></i></a></li>
+                {% endif %}
+
+                {% for page in displayed_pages %}
+                    {% if page == games_list.number %}
+                        <li class="active"><a href="matchlog.html?page={{ page }}{{ page_query_suffix }}{{ranking_query}}">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="matchlog.html?page={{ page }}{{ page_query_suffix }}{{ranking_query}}">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if games_list.has_next %}
+                    <li><a href="matchlog.html?page={{ games_list.next_page_number }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-forward"></i></a></li>
+                    <li><a href="matchlog.html?page={{ games_list.paginator.num_pages }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-fast-forward"></i></a></li>
+                {% else %}
+                    <li class="disabled"><a href="matchlog.html?page={{ games_list.number }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-forward"></i></a></li>
+                    <li class="disabled"><a href="matchlog.html?page={{ games_list.number }}{{ page_query_suffix }}{{ranking_query}}"><i class="icon-fast-forward"></i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
