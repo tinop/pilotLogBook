@@ -1,0 +1,25 @@
+{% extends "flightlog/base.html" %}
+
+{% block title %}Landings Evolution{% endblock %}
+
+{% block additional_styles %}
+    <link href="{{ STATIC_URL }}chart/style.css" media="screen" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block navigation_chart %}class="active"{% endblock %}
+
+{% block content_page_header %}
+Landings Evolution
+{% endblock %}
+
+{% block content %}
+	<div class="span12 offset0 pagination-centered">
+		<div id="chart"></div>
+		<script src="{{ STATIC_URL }}chart/rank-chart.js" type="text/javascript"></script>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+    <script type="text/javascript" src="{{ STATIC_URL }}d3js/d3.v2.min.js"></script>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "flightlog/base.html" %}
+
+{% block title %}Overview{% endblock %}
+
+{% block navigation_overview %}class="active"{% endblock %}
+
+{% block content_page_header %}Overview{% endblock %}
+
+{% block content %}
+
+<div class="span8 offset1 pagination-centered">
+   <p class="lead">PAST MONTH</p>
+   <table class="table table-condensed">
+      <thead>
+         <tr>
+            <th style="text-align:center">Flight time</th>
+            <th style="text-align:center">Landings</th>
+            <th style="text-align:center">PIC</th>
+            <th style="text-align:center">Dual</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td style="text-align:center">{{ flight_time_1m }}</td>
+            <td style="text-align:center">{{ landings_1m}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+
+<div class="span8 offset1 pagination-centered">
+   <p class="lead">PAST 3 MONTHS</p>
+   <table class="table table-condensed">
+      <thead>
+         <tr>
+            <th style="text-align:center">Flight time</th>
+            <th style="text-align:center">Landings</th>
+            <th style="text-align:center">PIC</th>
+            <th style="text-align:center">Dual</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td style="text-align:center">{{ flight_time_3m }}</td>
+            <td style="text-align:center">{{ landings_3m}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+
+<div class="span8 offset1 pagination-centered">
+   <p class="lead">PAST YEAR</p>
+   <table class="table table-condensed">
+      <thead>
+         <tr>
+            <th style="text-align:center">Flight time</th>
+            <th style="text-align:center">Landings</th>
+            <th style="text-align:center">PIC</th>
+            <th style="text-align:center">Dual</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td style="text-align:center">{{ flight_time_1y }}</td>
+            <td style="text-align:center">{{ landings_1y}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+
+<div class="span8 offset1 pagination-centered">
+   <p class="lead">TOTAL</p>
+   <table class="table table-condensed">
+      <thead>
+         <tr>
+            <th style="text-align:center">Flight time</th>
+            <th style="text-align:center">Landings</th>
+            <th style="text-align:center">PIC</th>
+            <th style="text-align:center">Dual</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td style="text-align:center">{{ tot_flight_time }}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+            <td style="text-align:center">{{ tot_landings}}</td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+
+<div class="span8 offset3">
+   <ul class="unstyled">
+      <li class="text-info">Estimated chance of winning the match (based on the current live ranking)</li>
+      {% if num_games %}
+      <li class="text-warning">Observed outcome{{ num_games|pluralize }} so far (based on <a href="matchlog.html?players={{ player_ids }}">{{ num_games }} game{{ num_games|pluralize }}</a>)</li>
+      {% endif %}
+      <li class="text-success">Expected rating updates in case of a victory</li>
+      <li class="text-error">Expected rating updates in case of a loss</li>
+   </ul>
+</div>
+
+</div>
+{% endblock content%}

@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 
     url(r'^flightlog.html', 'flightlog.views.flightlog'),
     url(r'^chart.html', 'flightlog.views.chart'),
+    url(r'^overview.html', 'flightlog.views.overview'),
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
