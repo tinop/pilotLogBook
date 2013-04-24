@@ -21,3 +21,7 @@ def flightlog(request):
     'date_title' : 'a',
     'opponents_title' : 'a',
     'flights': flights})
+    
+    
+def chart(request):
+    return django.shortcuts.render(request, 'flightlog/chart.html')
