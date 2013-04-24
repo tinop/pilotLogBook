@@ -8,9 +8,10 @@
 
 {% block content %}
 
-<div class="span8 offset1 pagination-centered">
+<div class="span8 offset1">
    <p class="lead">PAST MONTH</p>
-   <table class="table table-condensed">
+   <div class="pagination-centered">
+      <table class="table table-condensed">
       <thead>
          <tr>
             <th style="text-align:center">Flight time</th>
@@ -29,9 +30,11 @@
       </tbody>
    </table>
 </div>
+</div>
 
-<div class="span8 offset1 pagination-centered">
+<div class="span8 offset1">
    <p class="lead">PAST 3 MONTHS</p>
+   <div class="pagination-centered">
    <table class="table table-condensed">
       <thead>
          <tr>
@@ -51,9 +54,11 @@
       </tbody>
    </table>
 </div>
+</div>
 
-<div class="span8 offset1 pagination-centered">
+<div class="span8 offset1">
    <p class="lead">PAST YEAR</p>
+   <div class="pagination-centered">
    <table class="table table-condensed">
       <thead>
          <tr>
@@ -73,9 +78,11 @@
       </tbody>
    </table>
 </div>
+   </div>
 
-<div class="span8 offset1 pagination-centered">
+<div class="span8 offset1">
    <p class="lead">TOTAL</p>
+   <div class="pagination-centered">
    <table class="table table-condensed">
       <thead>
          <tr>
@@ -95,17 +102,7 @@
       </tbody>
    </table>
 </div>
-
-<div class="span8 offset3">
-   <ul class="unstyled">
-      <li class="text-info">Estimated chance of winning the match (based on the current live ranking)</li>
-      {% if num_games %}
-      <li class="text-warning">Observed outcome{{ num_games|pluralize }} so far (based on <a href="matchlog.html?players={{ player_ids }}">{{ num_games }} game{{ num_games|pluralize }}</a>)</li>
-      {% endif %}
-      <li class="text-success">Expected rating updates in case of a victory</li>
-      <li class="text-error">Expected rating updates in case of a loss</li>
-   </ul>
-</div>
+   </div>
 
 </div>
 {% endblock content%}
