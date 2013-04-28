@@ -1,0 +1,19 @@
+{% extends "flightlog/base.html" %}
+
+{% block title %}DABS{% endblock %}
+
+{% block navigation_dabs_today %}class="active"{% endblock %}
+
+{% block content_page_header %}DABS{% endblock %}
+
+{% block content %}
+<div class="span10 offset0">
+   <p class="lead"> {{ when }}</p>
+</div>
+<div class="span10 offset0">
+
+   <iframe src={{ filename }} style="width:100%; height:1200px;" frameborder="0"></iframe>
+
+</div>
+
+{% endblock content%}

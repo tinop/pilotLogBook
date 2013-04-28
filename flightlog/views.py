@@ -2,9 +2,10 @@
 # Create your views here.
 import django.shortcuts
 from django.http import HttpResponse
+from django.shortcuts import render_to_response
 import flightlog.models as M
 import utilities
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -26,7 +27,11 @@ def home(request):
 
 
 def flightlog(request):
-   flights = M.Flight.objects.all().order_by('-date')
+   flights = ''
+   if 'sort' in request.GET:
+      flights = M.Flight.objects.all().order_by('-date')
+   else:
+      flights = M.Flight.objects.all().order_by('date')
    
    paginator = Paginator(flights, 20)
    page = request.GET.get('page')
@@ -93,6 +98,29 @@ def overview(request):
                                    'flight_time_1y': utilities.flightTimeFormatted(flight_time_1y)
                                   })
 
+def dabs(request):
+   filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_20130426.pdf&embedded=true'
+   when = ''
 
+   if 'when' in request.GET:
+      try:
+         when = request.GET['when']
+         if when == 'Today':
+            today = datetime.today()
+            datestr = today.strftime('%Y%m%d')
+            filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_'+ datestr +'.pdf&embedded=true'
+         else:
+            today = datetime.today() + timedelta(days=1) 
+            datestr = today.strftime('%Y%m%d')
+            filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-tomorrow/DABS_'+ datestr +'.pdf&embedded=true'
+         
+      except ValueError:
+         pass
+            
+
+   return django.shortcuts.render(request,
+                                  'flightlog/dabs.html',
+                                  {'filename' : filename,
+                                  'when' : when})
 
 

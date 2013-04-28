@@ -34,9 +34,6 @@ class Pilot(models.Model):
 
 class Flight(models.Model):
    
-   CHOICES = (('select1','select 1'),
-              ('select2','select 2'))
-   
    aircraft = models.ForeignKey(Aircraft)
    date = models.DateField()
    fromAirport = models.CharField(max_length=4, verbose_name='from')
@@ -64,8 +61,6 @@ class Flight(models.Model):
    
    def flightTimeFormatted(self):
       return utilities.flightTimeFormatted(self.flightTime())
-   
-   
    
    
    def __unicode__(self):
