@@ -35,6 +35,12 @@
 		2142B7271728609E006B9252 /* urls.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = urls.py; path = ../../ttrank/ttrank/urls.py; sourceTree = "<group>"; };
 		2142B7281728609E006B9252 /* wsgi.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = wsgi.py; path = ../../ttrank/ttrank/wsgi.py; sourceTree = "<group>"; };
 		2142B72C172868AA006B9252 /* utilities.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = utilities.py; path = ../utilities.py; sourceTree = "<group>"; };
+		2142B72D1729C12A006B9252 /* bootstrap.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = bootstrap.css; path = ../flightlog/static/bootstrap/css/bootstrap.css; sourceTree = "<group>"; };
+		2142B72E1729DA06006B9252 /* jquery.tablesorter.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = jquery.tablesorter.js; path = ../flightlog/static/bootstrap/js/jquery.tablesorter.js; sourceTree = "<group>"; };
+		2142B72F172B1B0A006B9252 /* dabs.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = dabs.html; path = ../templates/flightlog/dabs.html; sourceTree = "<group>"; };
+		2142B730172D1879006B9252 /* forms.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = forms.py; path = ../flightlog/forms.py; sourceTree = "<group>"; };
+		2142B731172D19DA006B9252 /* list.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = list.html; path = ../templates/flightlog/list.html; sourceTree = "<group>"; };
+		2142B732172D1F83006B9252 /* urls.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = urls.py; path = ../flightlog/urls.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -51,12 +57,16 @@
 			children = (
 				2142B72B17286138006B9252 /* templates */,
 				2142B7101728601A006B9252 /* settings.py */,
+				2142B730172D1879006B9252 /* forms.py */,
+				2142B732172D1F83006B9252 /* urls.py */,
 				2142B7111728601A006B9252 /* urls.py */,
 				2142B7121728601A006B9252 /* wsgi.py */,
 				2142B70D17286003006B9252 /* admin.py */,
 				2142B70E17286003006B9252 /* models.py */,
 				2142B70F17286003006B9252 /* views.py */,
 				2142B72C172868AA006B9252 /* utilities.py */,
+				2142B72E1729DA06006B9252 /* jquery.tablesorter.js */,
+				2142B72D1729C12A006B9252 /* bootstrap.css */,
 			);
 			name = PilotLogBook;
 			sourceTree = "<group>";
@@ -95,8 +105,10 @@
 		2142B72B17286138006B9252 /* templates */ = {
 			isa = PBXGroup;
 			children = (
+				2142B731172D19DA006B9252 /* list.html */,
 				2142B7131728602B006B9252 /* base.html */,
 				2142B7141728602B006B9252 /* chart.html */,
+				2142B72F172B1B0A006B9252 /* dabs.html */,
 				2142B7151728602B006B9252 /* flightlog.html */,
 				2142B7161728602B006B9252 /* index.html */,
 				2142B7171728602B006B9252 /* overview.html */,
