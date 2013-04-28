@@ -34,14 +34,49 @@ def home(request):
    return django.shortcuts.render(request, 'flightlog/index.html')
 
 
+headers = {'aircraft__model':'asc',
+   'aircraft__registration':'asc',
+   'date':'asc',
+   'fromAirport':'asc',
+   'toAirport':'asc',
+   'departure_time':'asc',
+   'arrival_time':'asc',
+   'pic':'asc',
+   'landings':'asc',
+   'night':'asc',
+   'ifr':'asc',
+   'remark':'asc',
+   'flight_time':'asc',}
+
+
 def flightlog(request):
-   flights = ''
-   if 'sort' in request.GET:
-      flights = M.Flight.objects.all().order_by('-date')
-   else:
-      flights = M.Flight.objects.all().order_by('date')
    
-   paginator = Paginator(flights, 20)
+   flights = M.Flight.objects.all()
+   flights = flights.order_by('-date')
+   
+   sort = request.GET.get('sort')
+   page = request.GET.get('page')
+   
+   if sort == 'flight_time' and page == None:
+      
+      if headers['flight_time'] == "des":
+         flights = sorted(flights, key=lambda a: a.flightTime(), reverse=True)
+         headers['flight_time'] = "asc"
+      else:
+         headers['flight_time'] = "des"
+         flights = sorted(flights, key=lambda a: a.flightTime())
+   elif sort is not None and page == None:
+         flights = flights.order_by(sort)
+         
+         if headers[sort] == "des":
+            flights = flights.reverse()
+            headers[sort] = "asc"
+         else:
+            headers[sort] = "des"
+   
+#TODO: the 'sort' is also neede when coiming from the pagination
+
+   paginator = Paginator(flights, 2)
    page = request.GET.get('page')
    try:
       gamesPage = paginator.page(page)
@@ -131,7 +166,7 @@ def dabs(request):
                                   {'filename' : filename,
                                   'when' : when})
 
-def list(request):
+def listd(request):
 
    # Handle file upload
    if request.method == 'POST':

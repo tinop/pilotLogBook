@@ -33,7 +33,7 @@ class Pilot(models.Model):
 
 
 class Flight(models.Model):
-   
+
    aircraft = models.ForeignKey(Aircraft)
    date = models.DateField()
    fromAirport = models.CharField(max_length=4, verbose_name='from')
@@ -63,8 +63,8 @@ class Flight(models.Model):
       return utilities.flightTimeFormatted(self.flightTime())
    
    
-   def __unicode__(self):
-      return self.fromAirport
+      #def __unicode__(self):
+#return self.id
 
 
 class Document(models.Model):

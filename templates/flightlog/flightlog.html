@@ -13,15 +13,15 @@
    <table id="myTable" class="table table-striped table-condensed table-hover">
       <thead>
          <tr>
-            <th class="sorter-shortDate dateFormat-ddmmyyyy">Date </th>
-            <th>Aircraft</th>
-            <th>Registration</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Flight Time</th>
-            <th>PIC</th>
-            <th>Landings</th>
-            <th>Remark</th>
+            <th><a href="flightlog.html?sort=date">Date </a></th>
+            <th><a href="flightlog.html?sort=aircraft__model">Aircraft </a></th>
+            <th><a href="flightlog.html?sort=aircraft__registration">Registration </a></th>
+            <th><a href="flightlog.html?sort=fromAirport">From</a></th>
+            <th><a href="flightlog.html?sort=toAirport">To</a></th>
+            <th><a href="flightlog.html?sort=flight_time">Flight Time </a></th>
+            <th><a href="flightlog.html?sort=pic">PIC </a></th>
+            <th><a href="flightlog.html?sort=landings">Landings </a></th>
+            <th><a href="flightlog.html?sort=remark">Remark </a></th>
          </tr>
       </thead>
       <tbody>
@@ -34,7 +34,7 @@
             <td>{{ flight.toAirport }}</td>
             <td>{{ flight.flightTimeFormatted}}</td>
             <td>{{ flight.pic}}</td>
-            <td><a href="flightlog.html?sort=desc"> {{ flight.landings }}</a> </td>
+            <td>{{ flight.landings }}</td>
             <td>{{ flight.remark}}</td>
          </tr>
          {% endfor %}
@@ -48,7 +48,38 @@
    {% endif %}
    {% endif %}
    
+
    {% if games_list.paginator.num_pages > 1 %}
+   
+    <div class="pagination pagination-centered">
+    <ul>
+    {% if games_list.has_previous %}
+    <li><a href="flightlog.html?page=1"><i class="icon-fast-backward"></i></a></li>
+    <li><a href="flightlog.html?page={{ games_list.previous_page_number }}"><i class="icon-backward"></i></a></li>
+    {% else %}
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-fast-backward"></i></a></li>
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-backward"></i></a></li>
+    {% endif %}
+    
+    {% for page in displayed_pages %}
+    {% if page == games_list.number %}
+    <li class="active"><a href="flightlog.html?page={{ page }}">{{ page }}</a></li>
+    {% else %}
+    <li><a href="flightlog.html?page={{ page }}">{{ page }}</a></li>
+    {% endif %}
+    {% endfor %}
+    
+    {% if games_list.has_next %}
+    <li><a href="flightlog.html?page={{ games_list.next_page_number }}"><i class="icon-forward"></i></a></li>
+    <li><a href="flightlog.html?page={{ games_list.paginator.num_pages }}"><i class="icon-fast-forward"></i></a></li>
+    {% else %}
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-forward"></i></a></li>
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-fast-forward"></i></a></li>
+    {% endif %}
+    </ul>
+    </div>
+    
+   <!--
    <div class="pagination pagination-centered">
       <ul>
          {% if games_list.has_previous %}
@@ -76,6 +107,7 @@
          {% endif %}
       </ul>
    </div>
+    -->
    {% endif %}
 </div>
 </div>
