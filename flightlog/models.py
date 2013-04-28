@@ -65,3 +65,7 @@ class Flight(models.Model):
    
    def __unicode__(self):
       return self.fromAirport
+
+
+class Document(models.Model):
+   gpsdata = models.FileField(upload_to='documents/%Y/%m/%d')
