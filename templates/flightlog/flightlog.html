@@ -54,27 +54,27 @@
     <div class="pagination pagination-centered">
     <ul>
     {% if games_list.has_previous %}
-    <li><a href="flightlog.html?page=1"><i class="icon-fast-backward"></i></a></li>
-    <li><a href="flightlog.html?page={{ games_list.previous_page_number }}"><i class="icon-backward"></i></a></li>
+    <li><a href="flightlog.html?page=1{{ sorted_by_suffix }}"><i class="icon-fast-backward"></i></a></li>
+    <li><a href="flightlog.html?page={{ games_list.previous_page_number }}{{ sorted_by_suffix }}""><i class="icon-backward"></i></a></li>
     {% else %}
-    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-fast-backward"></i></a></li>
-    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-backward"></i></a></li>
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}{{ sorted_by_suffix }}""><i class="icon-fast-backward"></i></a></li>
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}{{ sorted_by_suffix }}""><i class="icon-backward"></i></a></li>
     {% endif %}
     
     {% for page in displayed_pages %}
     {% if page == games_list.number %}
-    <li class="active"><a href="flightlog.html?page={{ page }}">{{ page }}</a></li>
+    <li class="active"><a href="flightlog.html?page={{ page }}{{ sorted_by_suffix }}"">{{ page }}</a></li>
     {% else %}
-    <li><a href="flightlog.html?page={{ page }}">{{ page }}</a></li>
+    <li><a href="flightlog.html?page={{ page }}{{ sorted_by_suffix }}"">{{ page }}</a></li>
     {% endif %}
     {% endfor %}
     
     {% if games_list.has_next %}
-    <li><a href="flightlog.html?page={{ games_list.next_page_number }}"><i class="icon-forward"></i></a></li>
-    <li><a href="flightlog.html?page={{ games_list.paginator.num_pages }}"><i class="icon-fast-forward"></i></a></li>
+    <li><a href="flightlog.html?page={{ games_list.next_page_number }}{{ sorted_by_suffix }}""><i class="icon-forward"></i></a></li>
+    <li><a href="flightlog.html?page={{ games_list.paginator.num_pages }}{{ sorted_by_suffix }}""><i class="icon-fast-forward"></i></a></li>
     {% else %}
-    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-forward"></i></a></li>
-    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}"><i class="icon-fast-forward"></i></a></li>
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}{{ sorted_by_suffix }}""><i class="icon-forward"></i></a></li>
+    <li class="disabled"><a href="flightlog.html?page={{ games_list.number }}{{ sorted_by_suffix }}""><i class="icon-fast-forward"></i></a></li>
     {% endif %}
     </ul>
     </div>

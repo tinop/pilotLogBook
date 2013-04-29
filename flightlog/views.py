@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 
 from flightlog.models import Document
 from flightlog.forms import DocumentForm
+import pdb;
 
 
 def sumFlights(flights):
@@ -34,49 +35,57 @@ def home(request):
    return django.shortcuts.render(request, 'flightlog/index.html')
 
 
-headers = {'aircraft__model':'asc',
-   'aircraft__registration':'asc',
-   'date':'asc',
-   'fromAirport':'asc',
-   'toAirport':'asc',
-   'departure_time':'asc',
-   'arrival_time':'asc',
-   'pic':'asc',
-   'landings':'asc',
-   'night':'asc',
-   'ifr':'asc',
-   'remark':'asc',
-   'flight_time':'asc',}
+headers = {'aircraft__model':'des',
+   'aircraft__registration':'des',
+   'date':'des',
+   'fromAirport':'des',
+   'toAirport':'des',
+   'departure_time':'des',
+   'arrival_time':'des',
+   'pic':'des',
+   'landings':'des',
+   'night':'des',
+   'ifr':'des',
+   'remark':'des',
+   'flight_time':'des',}
 
+ 
+def toggleSort(sort):
+  if headers[sort] == "des":
+    headers[sort] = "asc"
+  else:
+    headers[sort] = "des"  
 
 def flightlog(request):
    
-   flights = M.Flight.objects.all()
-   flights = flights.order_by('-date')
-   
    sort = request.GET.get('sort')
    page = request.GET.get('page')
+
+   if sort is None:
+     sort = 'date'
    
-   if sort == 'flight_time' and page == None:
-      
+   sortBySuffix = '&sort=%s' % sort
+   
+   flights = M.Flight.objects.all()
+
+   # if page != None, we are navigating throug pages -> dont toggle the sorting
+   if page is None:
+     toggleSort(sort) 
+   
+   if sort == 'flight_time':
       if headers['flight_time'] == "des":
          flights = sorted(flights, key=lambda a: a.flightTime(), reverse=True)
-         headers['flight_time'] = "asc"
       else:
-         headers['flight_time'] = "des"
          flights = sorted(flights, key=lambda a: a.flightTime())
-   elif sort is not None and page == None:
-         flights = flights.order_by(sort)
-         
-         if headers[sort] == "des":
-            flights = flights.reverse()
-            headers[sort] = "asc"
-         else:
-            headers[sort] = "des"
-   
-#TODO: the 'sort' is also neede when coiming from the pagination
+   else:
+     
+     flights = flights.order_by(sort)
+       
+     if headers[sort] == "des":
+       flights = flights.reverse()
+       
 
-   paginator = Paginator(flights, 2)
+   paginator = Paginator(flights, 5)
    page = request.GET.get('page')
    try:
       gamesPage = paginator.page(page)
@@ -96,12 +105,8 @@ def flightlog(request):
    return django.shortcuts.render(request,
                                   'flightlog/flightlog.html',
                                   {'games_list' : gamesPage,
-                                  'players_query_prefix' : 'a',
-                                  'page_query_suffix' : 'a',
-                                  'ranking_query' : 'a',
+                                  'sorted_by_suffix' : sortBySuffix,
                                   'displayed_pages' : displayedPages,
-                                  'date_title' : 'a',
-                                  'opponents_title' : 'a',
                                   'flights': flights})
 
 
