@@ -2,7 +2,7 @@
 from django import forms
 
 class DocumentForm(forms.Form):
-   gpsdata = forms.FileField(
+   gpsdatax = forms.FileField(
                              label='Select a file',
                              help_text='max. 42 megabytes'
                              )

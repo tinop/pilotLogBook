@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^overview.html', 'flightlog.views.overview'),
     url(r'^dabs.html', 'flightlog.views.dabs'),
    
-    (r'^', include('flightlog.urls')),
+    #(r'^', include('flightlog.urls')),
     
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),

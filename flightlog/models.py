@@ -44,7 +44,9 @@ class Flight(models.Model):
    landings = models.PositiveIntegerField()
    night = models.BooleanField(default=False)
    ifr = models.BooleanField(default=False)
-   remark = models.TextField()
+   remark = models.TextField(blank=True)
+   gpsdata = models.FileField(upload_to='documents/%Y/%m/%d/%H/%M/%S/', blank=True)
+
    #like = models.ChoiceField(choices=CHOICES, widget=forms.RadioSelect())
    
    def flightTime(self):
