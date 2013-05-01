@@ -4,11 +4,30 @@ import time
 from django.utils.timesince import timesince
 from datetime import datetime, timedelta
 import utilities
+from django.db.models.signals import post_save
 
 #from datetime import datetime
 
+from django.contrib.auth.models import User, UserManager
 
-# Create your models here.
+
+class Pilot(models.Model):
+   name = models.CharField(max_length=15)
+   lastName = models.CharField(max_length=15)
+   
+   def __unicode__(self):
+      return self.name[0] + ". " +self.lastName
+
+class UserProfile(models.Model):
+   user = models.ForeignKey(User, unique=True)
+   #url = models.URLField("Website", blank=True)
+   #company = models.CharField(max_length=50, blank=True)
+   pilot = models.ForeignKey(Pilot)
+   expireData = models.DateField()
+
+   def __unicode__(self):
+      return self.pilot.name
+
 
 class Aircraft(models.Model):
    MODELS = (('remosGx', 'Remos GX'),
@@ -24,26 +43,33 @@ class Aircraft(models.Model):
       return self.get_model_display() + " : " + self.get_registration_display()
 
 
-class Pilot(models.Model):
-   name = models.CharField(max_length=15)
-   
-   def __unicode__(self):
-      return self.name
 
 
 
 class Flight(models.Model):
 
+   OPERATION = (('se','Single Engine'),
+                 ('me','Multiple Engine'))
+                 
+   FUNCTION = (('pic','PIC'),
+                 ('copi','Copi'),
+               ('dual','Dual'),
+               ('instructor','Instructor'))
+   
    aircraft = models.ForeignKey(Aircraft)
-   date = models.DateField()
-   fromAirport = models.CharField(max_length=4, verbose_name='from')
-   toAirport = models.CharField(max_length=4, verbose_name='to')
+   date = models.DateField(default=datetime.now)
+   fromAirport = models.CharField(max_length=4, verbose_name='from', default='LSMF')
+   toAirport = models.CharField(max_length=4, verbose_name='to', default='LSMF')
    departure_time = models.TimeField()
    arrival_time = models.TimeField()
+   operation = models.CharField(max_length=20, choices=OPERATION, default='se')
    pic = models.ForeignKey(Pilot)
-   landings = models.PositiveIntegerField()
+
+   landings = models.PositiveIntegerField(default=1)
    night = models.BooleanField(default=False)
    ifr = models.BooleanField(default=False)
+   
+   funciton = models.CharField(max_length=20, choices=FUNCTION, default='pic')
    remark = models.TextField(blank=True)
    gpsdata = models.FileField(upload_to='documents/%Y/%m/%d/%H/%M/%S/', blank=True)
 
@@ -65,8 +91,8 @@ class Flight(models.Model):
       return utilities.flightTimeFormatted(self.flightTime())
    
    
-      #def __unicode__(self):
-#return self.id
+   def __unicode__(self):
+      return self.date.strftime("%d-%m-%Y ")+self.departure_time.strftime("%H:%M")
 
 
 class Document(models.Model):

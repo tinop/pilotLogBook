@@ -36,7 +36,7 @@
             <td>{{ flight.flightTimeFormatted}}</td>
             <td>{{ flight.pic}}</td>
             <td>{{ flight.landings }}</td>
-            <td>{{ flight.remark }}</td>
+            <td>{% if flight.remark %}<a href="http://maps.google.com/maps/ms?{{ flight.remark }}" target="_blank"><i class="icon-globe"></i></a>{% endif %}</td>
             <td>{% if flight.gpsdata %}<a href="http://maps.google.com?q=127.0.0.1:8000/{{ flight.gpsdata.url }}"><i class="icon-globe"></i></a>{% endif %}</td>
             
          </tr>
@@ -50,8 +50,11 @@
    <p>No games are available for this player.</p>
    {% endif %}
    {% endif %}
-   <a href="https://docs.google.com/file/d/0Bx8esiuE1Ss1UlJ1UUxqV3N5d1U/edit?usp=sharing"> link</a>
-    <a href="https://docs.google.com/file/d/0Bx8esiuE1Ss1QWhha0liOE1lclk/edit?usp=sharing"> link</a>
+   <a mimetype="application/vnd.google-earth.kml+xml" href="http://maps.google.com?q=https://dl.dropboxusercontent.com/u/92724279/VoloLucomagnoGE.kml"> links</a>
+    <a mimetype="application/vnd.google-earth.kml+xml" href="https://maps.google.com/maps/ms?msa=0&msid=217968750089339292076.0004db9b4f5935a9169df" target="_blank"> link</a>
+   
+   <a mimetype="application/vnd.google-earth.kml+xml" href="https://sites.google.com/site/testxx1212/list/Volo%20Lucomagno%20GE.kml?attredirects=0&d=1"> link</a>
+
 
    {% if games_list.paginator.num_pages > 1 %}
    
