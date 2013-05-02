@@ -27,7 +27,7 @@ class UserProfile(models.Model):
 
    def __unicode__(self):
       return self.pilot.name
-
+      
 
 class Aircraft(models.Model):
    MODELS = (('remosGx', 'Remos GX'),
@@ -41,8 +41,6 @@ class Aircraft(models.Model):
    
    def __unicode__(self):
       return self.get_model_display() + " : " + self.get_registration_display()
-
-
 
 
 

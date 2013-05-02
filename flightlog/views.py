@@ -7,6 +7,8 @@ import flightlog.models as M
 import utilities
 from datetime import date, timedelta, datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 
 from django.template import RequestContext
@@ -19,180 +21,208 @@ import pdb;
 
 
 def sumFlights(flights):
-   tot_landings = 0
-   tot_flight_time = 0
-   
-   for flight in flights:
+  tot_landings = 0
+  tot_flight_time = 0
+  
+  for flight in flights:
       tot_landings = tot_landings + flight.landings
       tot_flight_time = tot_flight_time + flight.flightTime()
 
-   return (tot_landings, tot_flight_time)
+  return (tot_landings, tot_flight_time)
 
 
-
+@login_required
 def home(request):
-   #return HttpResponse("Hello, world. You're at the poll index.")
-   return django.shortcuts.render(request, 'flightlog/index.html')
+  #return HttpResponse("Hello, world. You're at the poll index.")
+  return django.shortcuts.render(request, 'flightlog/index.html')
 
 
 headers = {'aircraft__model':'des',
-   'aircraft__registration':'des',
-   'date':'des',
-   'fromAirport':'des',
-   'toAirport':'des',
-   'departure_time':'des',
-   'arrival_time':'des',
-   'pic':'des',
-   'landings':'des',
-   'night':'des',
-   'ifr':'des',
-   'remark':'des',
-   'flight_time':'des',}
+  'aircraft__registration':'des',
+  'date':'des',
+  'fromAirport':'des',
+  'toAirport':'des',
+  'departure_time':'des',
+  'arrival_time':'des',
+  'pic':'des',
+  'landings':'des',
+  'night':'des',
+  'ifr':'des',
+  'remark':'des',
+  'flight_time':'des',}
 
- 
+
 def toggleSort(sort):
   if headers[sort] == "des":
     headers[sort] = "asc"
   else:
     headers[sort] = "des"  
 
+@login_required
 def flightlog(request):
-   
-   sort = request.GET.get('sort')
-   page = request.GET.get('page')
+  
+  #user = authenticate(username='tino', password='n')
+  
+  #if user is not None:
+    ## the password verified for the user
+    #if user.is_active:
+      #print("User is valid, active and authenticated")
+      #login(request, user)
+    #else:
+      #print("The password is valid, but the account has been disabled!")
+  #else:
+    ## the authentication system was unable to verify the username and password
+    #print("The username and password were incorrect.")
+  
+  user_profile = request.user.get_profile()
+  expireData = user_profile.expireData
+  
+  print expireData
+  
+  sort = request.GET.get('sort')
+  page = request.GET.get('page')
 
-   if sort is None:
-     sort = 'date'
-   
-   sortBySuffix = '&sort=%s' % sort
-   
-   flights = M.Flight.objects.all()
+  if sort is None:
+    sort = 'date'
+  
+  sortBySuffix = '&sort=%s' % sort
+  
+  flights = M.Flight.objects.all()
 
-   # if page != None, we are navigating throug pages -> dont toggle the sorting
-   if page is None:
-     toggleSort(sort) 
-   
-   if sort == 'flight_time':
+  # if page != None, we are navigating throug pages -> dont toggle the sorting
+  if page is None:
+    toggleSort(sort) 
+  
+  if sort == 'flight_time':
       if headers['flight_time'] == "des":
-         flights = sorted(flights, key=lambda a: a.flightTime(), reverse=True)
+	flights = sorted(flights, key=lambda a: a.flightTime(), reverse=True)
       else:
-         flights = sorted(flights, key=lambda a: a.flightTime())
-   else:
-     
-     flights = flights.order_by(sort)
-       
-     if headers[sort] == "des":
-       flights = flights.reverse()
-       
+	flights = sorted(flights, key=lambda a: a.flightTime())
+  else:
+    
+    flights = flights.order_by(sort)
+      
+    if headers[sort] == "des":
+      flights = flights.reverse()
+      
 
-   paginator = Paginator(flights, 5)
-   page = request.GET.get('page')
-   try:
+  paginator = Paginator(flights, 5)
+  page = request.GET.get('page')
+  try:
       gamesPage = paginator.page(page)
-   except PageNotAnInteger:
+  except PageNotAnInteger:
       # If page is not an integer, deliver the first page
       gamesPage = paginator.page(1)
-   except EmptyPage:
+  except EmptyPage:
       # If page is out of range, deliver the first page
       gamesPage = paginator.page(1) #paginator.num_pages)
-   finally:
+  finally:
       HALF_RANGE = 5
       RANGE_SIZE = 2*HALF_RANGE + 1
       minPage = max(1, min(gamesPage.number - HALF_RANGE, paginator.num_pages - RANGE_SIZE + 1))
       maxPage = min(max(gamesPage.number + HALF_RANGE, RANGE_SIZE), paginator.num_pages)
       displayedPages = range(minPage, maxPage+1)
 
-   return django.shortcuts.render(request,
-                                  'flightlog/flightlog.html',
-                                  {'games_list' : gamesPage,
-                                  'sorted_by_suffix' : sortBySuffix,
-                                  'displayed_pages' : displayedPages,
-                                  'flights': flights})
+  return django.shortcuts.render(request,
+				  'flightlog/flightlog.html',
+				  {'games_list' : gamesPage,
+				  'sorted_by_suffix' : sortBySuffix,
+				  'displayed_pages' : displayedPages,
+				  'flights': flights})
 
-
+@login_required
 def chart(request):
-   return django.shortcuts.render(request, 'flightlog/chart.html')
+  return django.shortcuts.render(request, 'flightlog/chart.html')
 
+@login_required
 def overview(request):
-   
-   # all flights
-   flights = M.Flight.objects.all()
-   (tot_landings, tot_flight_time) = sumFlights(flights)
-   
-   # last month
-   d=date.today()-timedelta(days=31)
-   flights = M.Flight.objects.filter(date__gte=d)
-   (landings_1m, flight_time_1m) = sumFlights(flights)
-   
-   # last 3 month
-   d=date.today()-timedelta(days=60)
-   flights = M.Flight.objects.filter(date__gte=d)
-   (landings_3m, flight_time_3m) = sumFlights(flights)
-   
-   # last year
-   d=date.today()-timedelta(days=365)
-   flights = M.Flight.objects.filter(date__gte=d)
-   (landings_1y, flight_time_1y) = sumFlights(flights)
-   
-   return django.shortcuts.render(request,
-                                  'flightlog/overview.html',
-                                  {'tot_landings': tot_landings,
-                                   'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
-                                   'landings_1m': landings_1m,
-                                   'flight_time_1m': utilities.flightTimeFormatted(flight_time_1m),
-                                   'landings_3m': landings_3m,
-                                   'flight_time_3m': utilities.flightTimeFormatted(flight_time_3m),
-                                   'landings_1y': landings_1y,
-                                   'flight_time_1y': utilities.flightTimeFormatted(flight_time_1y)
-                                  })
-
+  
+  user_profile = request.user.get_profile()
+  expireData = user_profile.expireData
+  d=expireData-timedelta(days=365)
+  flights = M.Flight.objects.filter(date__gte=d)
+  (landings_1y, flight_time_1y) = sumFlights(flights)
+  
+  # all flights
+  flights = M.Flight.objects.all()
+  (tot_landings, tot_flight_time) = sumFlights(flights)
+  
+  # last month
+  d=date.today()-timedelta(days=31)
+  flights = M.Flight.objects.filter(date__gte=d)
+  (landings_1m, flight_time_1m) = sumFlights(flights)
+  
+  # last 3 month
+  d=date.today()-timedelta(days=60)
+  flights = M.Flight.objects.filter(date__gte=d)
+  (landings_3m, flight_time_3m) = sumFlights(flights)
+  
+  # last year
+  d=date.today()-timedelta(days=365)
+  flights = M.Flight.objects.filter(date__gte=d)
+  #(landings_1y, flight_time_1y) = sumFlights(flights)
+  
+  return django.shortcuts.render(request,
+				  'flightlog/overview.html',
+				  {'tot_landings': tot_landings,
+				  'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
+				  'landings_1m': landings_1m,
+				  'flight_time_1m': utilities.flightTimeFormatted(flight_time_1m),
+				  'landings_3m': landings_3m,
+				  'flight_time_3m': utilities.flightTimeFormatted(flight_time_3m),
+				  'landings_1y': landings_1y,
+				  'flight_time_1y': utilities.flightTimeFormatted(flight_time_1y)
+				  })
+				  
+				  
+@login_required  
 def dabs(request):
-   filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_20130426.pdf&embedded=true'
-   when = ''
+  filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_20130426.pdf&embedded=true'
+  when = ''
 
-   if 'when' in request.GET:
+  if 'when' in request.GET:
       try:
-         when = request.GET['when']
-         if when == 'Today':
-            today = datetime.today()
-            datestr = today.strftime('%Y%m%d')
-            filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_'+ datestr +'.pdf&embedded=true'
-         else:
-            today = datetime.today() + timedelta(days=1) 
-            datestr = today.strftime('%Y%m%d')
-            filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-tomorrow/DABS_'+ datestr +'.pdf&embedded=true'
-         
+	when = request.GET['when']
+	if when == 'Today':
+	    today = datetime.today()
+	    datestr = today.strftime('%Y%m%d')
+	    filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_'+ datestr +'.pdf&embedded=true'
+	else:
+	    today = datetime.today() + timedelta(days=1) 
+	    datestr = today.strftime('%Y%m%d')
+	    filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-tomorrow/DABS_'+ datestr +'.pdf&embedded=true'
+	
       except ValueError:
-         pass
-            
+	pass
+	    
 
-   return django.shortcuts.render(request,
-                                  'flightlog/dabs.html',
-                                  {'filename' : filename,
-                                  'when' : when})
+  return django.shortcuts.render(request,
+				  'flightlog/dabs.html',
+				  {'filename' : filename,
+				  'when' : when})
 
 def listd(request):
 
-   # Handle file upload
-   if request.method == 'POST':
+  # Handle file upload
+  if request.method == 'POST':
       form = DocumentForm(request.POST, request.FILES)
       if form.is_valid():
-         newdoc = Document(gpsdata = request.FILES['gpsdata'])
-         newdoc.save()
-         
-         # Redirect to the document list after POST
-         return HttpResponseRedirect(reverse('flightlog.views.list'))
-   else:
+	newdoc = Document(gpsdata = request.FILES['gpsdata'])
+	newdoc.save()
+	
+	# Redirect to the document list after POST
+	return HttpResponseRedirect(reverse('flightlog.views.list'))
+  else:
       form = DocumentForm() # A empty, unbound form
-   
-   # Load documents for the list page
-   documents = Document.objects.all()
-   
-   # Render list page with the documents and the form
-   return render_to_response(
-                             'flightlog/list.html',
-                             {'documents': documents, 'form': form},
-                             context_instance=RequestContext(request)
-                             )
+  
+  # Load documents for the list page
+  documents = Document.objects.all()
+  
+  # Render list page with the documents and the form
+  return render_to_response(
+			    'flightlog/list.html',
+			    {'documents': documents, 'form': form},
+			    context_instance=RequestContext(request)
+			    )
 
 
