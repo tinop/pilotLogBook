@@ -145,7 +145,7 @@ def chart(request):
   return django.shortcuts.render(request, 'flightlog/chart.html')
 
 @login_required
-def overview(request):
+def overview(request, year=None):
   
   user_profile = request.user.get_profile()
   expireData = user_profile.expireData
@@ -168,19 +168,16 @@ def overview(request):
   #(landings_3m, flight_time_3m) = sumFlights(flights)
   
   # last year
-  d=date.today()-timedelta(days=365)
-  this_year = date(date.today().year, 1, 1)
-  flights = M.Flight.objects.filter(date__gte=this_year)
+  if not year:
+    year = date(date.today().year, 1, 1)
+    
+  flights = M.Flight.objects.filter(date__gte=year)
   (landings_y, flight_time_y, flight_time_pic_y, flight_time_dual_y)  = sumFlights(flights)
   #(landings_1y, flight_time_1y) = sumFlights(flights)
   
   firstFlight = M.Flight.objects.order_by('date')[0]
 
-  years = range(firstFlight.date.year, date.today().year+1)
-  
-  return django.shortcuts.render(request,
-				  'flightlog/overview.html',
-				  {'tot_landings': tot_landings,
+  templateDict = {'tot_landings': tot_landings,
 				  'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
 				  'flight_time_pic': utilities.flightTimeFormatted(flight_time_pic),
 				  'flight_time_dual': utilities.flightTimeFormatted(flight_time_dual),
@@ -192,8 +189,12 @@ def overview(request):
 				  'flight_time_y': utilities.flightTimeFormatted(flight_time_y),
 				  'flight_time_pic_y': utilities.flightTimeFormatted(flight_time_pic_y),
 				  'flight_time_dual_y': utilities.flightTimeFormatted(flight_time_dual_y),
-				  'years' : years,
-				  })
+				  }
+  templateDict['current'] = year.year
+  templateDict['range'] = range(firstFlight.date.year, date.today().year+1)
+
+  
+  return django.shortcuts.render(request,'flightlog/overview.html',templateDict)
 				  
 				  
 @login_required  
