@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
+    url(r'^overview/(?P<year>\d+)/', 'flightlog.views.overview'),
+    
     url(r'^flightlog.html', 'flightlog.views.flightlog'),
     url(r'^chart.html', 'flightlog.views.chart'),
     url(r'^overview.html', 'flightlog.views.overview'),

@@ -170,7 +170,9 @@ def overview(request, year=None):
   # last year
   if not year:
     year = date(date.today().year, 1, 1)
-    
+  else:
+    year = date(int(year), 1, 1)
+  
   flights = M.Flight.objects.filter(date__gte=year)
   (landings_y, flight_time_y, flight_time_pic_y, flight_time_dual_y)  = sumFlights(flights)
   #(landings_1y, flight_time_1y) = sumFlights(flights)
