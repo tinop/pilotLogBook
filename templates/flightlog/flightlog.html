@@ -4,7 +4,12 @@
 
 {% block navigation_log %}class="active"{% endblock %}
 
-{% block content_page_header %}Flight Log {{ user.username }} {% endblock %}
+{% block content_header %}
+<div class="page-header">
+	<h1>Flight Log</h1>
+    <p class="lead"> {{ user.username}}</p>
+</div>
+{% endblock %}
 
 {% block content %}
 

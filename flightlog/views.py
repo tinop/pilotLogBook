@@ -147,15 +147,32 @@ def chart(request):
 @login_required
 def overview(request, year=None):
   
+  templateDict = {}
+  
+  
   user_profile = request.user.get_profile()
   expireData = user_profile.expireData
   d=expireData-timedelta(days=365)
   flights = M.Flight.objects.filter(date__gte=d)
+  
   (landings_exp, flight_time_exp, flight_time_pic_exp, flight_time_dual_exp) = sumFlights(flights)
+  
+  templateDict['expire_date']= expireData
+  templateDict['nb_exp'] = len(flights)
+  templateDict['landings_exp'] = landings_exp
+  templateDict['flight_time_exp'] = utilities.flightTimeFormatted(flight_time_exp)
+  templateDict['flight_time_pic_exp'] = utilities.flightTimeFormatted(flight_time_pic_exp)
+  templateDict['flight_time_dual_exp'] = utilities.flightTimeFormatted(flight_time_dual_exp)
   
   # all flights
   flights = M.Flight.objects.all()
-  (tot_landings, tot_flight_time, flight_time_pic, flight_time_dual)  = sumFlights(flights)
+  (landings_tot, flight_time_tot, flight_time_pic_tot, flight_time_dual_tot)  = sumFlights(flights)
+  
+  templateDict['nb_tot'] = len(flights)
+  templateDict['landings_tot'] = landings_tot
+  templateDict['flight_time_tot'] = utilities.flightTimeFormatted(flight_time_tot)
+  templateDict['flight_time_pic_tot'] = utilities.flightTimeFormatted(flight_time_pic_tot)
+  templateDict['flight_time_dual_tot'] = utilities.flightTimeFormatted(flight_time_dual_tot)
   
   # last month
   #d=date.today()-timedelta(days=31)
@@ -169,31 +186,46 @@ def overview(request, year=None):
   
   # last year
   if not year:
-    year = date(date.today().year, 1, 1)
-  else:
-    year = date(int(year), 1, 1)
+    year = date.today().year
+
   
-  flights = M.Flight.objects.filter(date__gte=year)
+  #flights = M.Flight.objects.filter(date__gte=year)
+  flights = M.Flight.objects.filter(date__year = year)
   (landings_y, flight_time_y, flight_time_pic_y, flight_time_dual_y)  = sumFlights(flights)
   #(landings_1y, flight_time_1y) = sumFlights(flights)
   
+  templateDict['nb_y'] = len(flights)
+  templateDict['landings_y'] = landings_y
+  templateDict['flight_time_y'] = utilities.flightTimeFormatted(flight_time_y)
+  templateDict['flight_time_pic_y'] = utilities.flightTimeFormatted(flight_time_pic_y)
+  templateDict['flight_time_dual_y'] = utilities.flightTimeFormatted(flight_time_dual_y)
+  
   firstFlight = M.Flight.objects.order_by('date')[0]
 
-  templateDict = {'tot_landings': tot_landings,
-				  'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
-				  'flight_time_pic': utilities.flightTimeFormatted(flight_time_pic),
-				  'flight_time_dual': utilities.flightTimeFormatted(flight_time_dual),
-				  'landings_exp': landings_exp,
-				  'flight_time_exp': utilities.flightTimeFormatted(flight_time_exp),
-				  'flight_time_pic_exp': utilities.flightTimeFormatted(flight_time_pic_exp),
-				  'flight_time_dual_exp': utilities.flightTimeFormatted(flight_time_dual_exp),
-				  'landings_y': landings_y,
-				  'flight_time_y': utilities.flightTimeFormatted(flight_time_y),
-				  'flight_time_pic_y': utilities.flightTimeFormatted(flight_time_pic_y),
-				  'flight_time_dual_y': utilities.flightTimeFormatted(flight_time_dual_y),
-				  }
-  templateDict['current'] = year.year
+  #templateDict = {'tot_landings': tot_landings,
+				  #'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
+				  #'flight_time_pic': utilities.flightTimeFormatted(flight_time_pic),
+				  #'flight_time_dual': utilities.flightTimeFormatted(flight_time_dual),
+				  #'landings_exp': landings_exp,
+				  #'flight_time_exp': utilities.flightTimeFormatted(flight_time_exp),
+				  #'flight_time_pic_exp': utilities.flightTimeFormatted(flight_time_pic_exp),
+				  #'flight_time_dual_exp': utilities.flightTimeFormatted(flight_time_dual_exp),
+				  #'landings_y': landings_y,
+				  #'flight_time_y': utilities.flightTimeFormatted(flight_time_y),
+				  #'flight_time_pic_y': utilities.flightTimeFormatted(flight_time_pic_y),
+				  #'flight_time_dual_y': utilities.flightTimeFormatted(flight_time_dual_y),
+				  #}
+  templateDict['current'] = year
   templateDict['range'] = range(firstFlight.date.year, date.today().year+1)
+  
+  nextYear= M.Flight.objects.filter(date__year = int(year)+1 )
+  if nextYear:
+    templateDict['nextYear'] = int(year)+1
+    
+  prevYear= M.Flight.objects.filter(date__year = int(year)-1)
+  if prevYear:
+    templateDict['prevYear'] = int(year)-1
+
 
   
   return django.shortcuts.render(request,'flightlog/overview.html',templateDict)
