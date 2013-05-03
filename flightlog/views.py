@@ -174,6 +174,10 @@ def overview(request):
   (landings_y, flight_time_y, flight_time_pic_y, flight_time_dual_y)  = sumFlights(flights)
   #(landings_1y, flight_time_1y) = sumFlights(flights)
   
+  firstFlight = M.Flight.objects.order_by('date')[0]
+
+  years = range(firstFlight.date.year, date.today().year+1)
+  
   return django.shortcuts.render(request,
 				  'flightlog/overview.html',
 				  {'tot_landings': tot_landings,
@@ -188,6 +192,7 @@ def overview(request):
 				  'flight_time_y': utilities.flightTimeFormatted(flight_time_y),
 				  'flight_time_pic_y': utilities.flightTimeFormatted(flight_time_pic_y),
 				  'flight_time_dual_y': utilities.flightTimeFormatted(flight_time_dual_y),
+				  'years' : years,
 				  })
 				  
 				  

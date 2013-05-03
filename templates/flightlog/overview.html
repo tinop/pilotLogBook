@@ -35,6 +35,31 @@
 
 <div class="span9 offset0  ">
    <p class="lead">PAST YEAR</p>
+   
+
+<ul class="nav nav-pills">
+    <li class="dropdown pull-left">
+        <a class="dropdown-toggle" data-toggle="dropdown" id="dLabel" role="button" href="#">
+            Select week...
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            {% for year in years %}
+                <li><a href="/overview/{{ year }}/"> {{ year }} </a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% if nextRankingId %}
+        <li class="pull-left"><a href="/ranking/{{nextRankingId}}/">{{nextRankingName}} &rarr;</a></li>
+    {% else %}
+        <li class="pull-left disabled"><a href="#">Next Week &rarr;</a></li>
+    {% endif %}
+    {% if prevRankingId %}
+        <li class="pull-left"><a href="/ranking/{{prevRankingId}}/">&larr; {{prevRankingName}}</a></li>
+    {% endif %}
+</ul>
+
+
    <div class="pagination-centered">
    <table class="table table-striped table-condensed table-hover">
       <thead>
