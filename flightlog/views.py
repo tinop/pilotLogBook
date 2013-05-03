@@ -23,12 +23,22 @@ import pdb;
 def sumFlights(flights):
   tot_landings = 0
   tot_flight_time = 0
+  pic_flight_time = 0
+  dual_flight_time = 0
   
   for flight in flights:
       tot_landings = tot_landings + flight.landings
       tot_flight_time = tot_flight_time + flight.flightTime()
+      
+  pic = flights.filter(function__iexact='pic')
+  for flight in pic:
+      pic_flight_time = pic_flight_time + flight.flightTime()
+    
+  dual = flights.filter(function__iexact='dual')
+  for flight in dual:
+      dual_flight_time = dual_flight_time + flight.flightTime()
 
-  return (tot_landings, tot_flight_time)
+  return (tot_landings, tot_flight_time, pic_flight_time, dual_flight_time)
 
 
 @login_required
@@ -141,37 +151,43 @@ def overview(request):
   expireData = user_profile.expireData
   d=expireData-timedelta(days=365)
   flights = M.Flight.objects.filter(date__gte=d)
-  (landings_1y, flight_time_1y) = sumFlights(flights)
+  (landings_exp, flight_time_exp, flight_time_pic_exp, flight_time_dual_exp) = sumFlights(flights)
   
   # all flights
   flights = M.Flight.objects.all()
-  (tot_landings, tot_flight_time) = sumFlights(flights)
+  (tot_landings, tot_flight_time, flight_time_pic, flight_time_dual)  = sumFlights(flights)
   
   # last month
-  d=date.today()-timedelta(days=31)
-  flights = M.Flight.objects.filter(date__gte=d)
-  (landings_1m, flight_time_1m) = sumFlights(flights)
+  #d=date.today()-timedelta(days=31)
+  #flights = M.Flight.objects.filter(date__gte=d)
+  #(landings_1m, flight_time_1m) = sumFlights(flights)
   
   # last 3 month
-  d=date.today()-timedelta(days=60)
-  flights = M.Flight.objects.filter(date__gte=d)
-  (landings_3m, flight_time_3m) = sumFlights(flights)
+  #d=date.today()-timedelta(days=60)
+  #flights = M.Flight.objects.filter(date__gte=d)
+  #(landings_3m, flight_time_3m) = sumFlights(flights)
   
   # last year
   d=date.today()-timedelta(days=365)
-  flights = M.Flight.objects.filter(date__gte=d)
+  this_year = date(date.today().year, 1, 1)
+  flights = M.Flight.objects.filter(date__gte=this_year)
+  (landings_y, flight_time_y, flight_time_pic_y, flight_time_dual_y)  = sumFlights(flights)
   #(landings_1y, flight_time_1y) = sumFlights(flights)
   
   return django.shortcuts.render(request,
 				  'flightlog/overview.html',
 				  {'tot_landings': tot_landings,
 				  'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
-				  'landings_1m': landings_1m,
-				  'flight_time_1m': utilities.flightTimeFormatted(flight_time_1m),
-				  'landings_3m': landings_3m,
-				  'flight_time_3m': utilities.flightTimeFormatted(flight_time_3m),
-				  'landings_1y': landings_1y,
-				  'flight_time_1y': utilities.flightTimeFormatted(flight_time_1y)
+				  'flight_time_pic': utilities.flightTimeFormatted(flight_time_pic),
+				  'flight_time_dual': utilities.flightTimeFormatted(flight_time_dual),
+				  'landings_exp': landings_exp,
+				  'flight_time_exp': utilities.flightTimeFormatted(flight_time_exp),
+				  'flight_time_pic_exp': utilities.flightTimeFormatted(flight_time_pic_exp),
+				  'flight_time_dual_exp': utilities.flightTimeFormatted(flight_time_dual_exp),
+				  'landings_y': landings_y,
+				  'flight_time_y': utilities.flightTimeFormatted(flight_time_y),
+				  'flight_time_pic_y': utilities.flightTimeFormatted(flight_time_pic_y),
+				  'flight_time_dual_y': utilities.flightTimeFormatted(flight_time_dual_y),
 				  })
 				  
 				  
