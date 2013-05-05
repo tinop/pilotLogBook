@@ -7,9 +7,12 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
-AUTH_PROFILE_MODULE = "flightlog.UserProfile"
+#AUTH_PROFILE_MODULE = "flightlog.PilotUser"
 
-MANAGERS = ADMINS
+#AUTHENTICATION_BACKENDS = ('flightlog.auth_backends.CustomUserModelBackend',)
+
+#CUSTOM_USER_MODEL = 'accounts.PilotUser'
+#MANAGERS = ADMINS
 
 DATABASES = {
     'default': {

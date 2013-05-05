@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		2142B70D17286003006B9252 /* admin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = admin.py; path = ../flightlog/admin.py; sourceTree = "<group>"; };
+		2142B70D17286003006B9252 /* admin.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = admin.py; path = ../flightlog/admin.py; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.python; };
 		2142B70E17286003006B9252 /* models.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = models.py; path = ../flightlog/models.py; sourceTree = "<group>"; };
 		2142B70F17286003006B9252 /* views.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = views.py; path = ../flightlog/views.py; sourceTree = "<group>"; };
 		2142B7101728601A006B9252 /* settings.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = settings.py; path = ../pilotLogBook/settings.py; sourceTree = "<group>"; };
@@ -34,7 +34,6 @@
 		2142B7261728609E006B9252 /* settings.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = settings.py; path = ../../ttrank/ttrank/settings.py; sourceTree = "<group>"; };
 		2142B7271728609E006B9252 /* urls.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = urls.py; path = ../../ttrank/ttrank/urls.py; sourceTree = "<group>"; };
 		2142B7281728609E006B9252 /* wsgi.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = wsgi.py; path = ../../ttrank/ttrank/wsgi.py; sourceTree = "<group>"; };
-		2142B72C172868AA006B9252 /* utilities.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = utilities.py; path = ../utilities.py; sourceTree = "<group>"; };
 		2142B72D1729C12A006B9252 /* bootstrap.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = bootstrap.css; path = ../flightlog/static/bootstrap/css/bootstrap.css; sourceTree = "<group>"; };
 		2142B72E1729DA06006B9252 /* jquery.tablesorter.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = jquery.tablesorter.js; path = ../flightlog/static/bootstrap/js/jquery.tablesorter.js; sourceTree = "<group>"; };
 		2142B72F172B1B0A006B9252 /* dabs.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = dabs.html; path = ../templates/flightlog/dabs.html; sourceTree = "<group>"; };
@@ -44,6 +43,8 @@
 		2142B733172EFB5D006B9252 /* rank-chart.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "rank-chart.js"; path = "../../ttrank/rank/static/chart/rank-chart.js"; sourceTree = "<group>"; };
 		2142B734172EFBA7006B9252 /* test-chart.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "test-chart.js"; path = "../../ttrank/rank/static/chart/test-chart.js"; sourceTree = "<group>"; };
 		2142B73517313D05006B9252 /* auth_backend.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = auth_backend.py; path = ../flightlog/auth_backend.py; sourceTree = "<group>"; };
+		21E47C801736C282003C4E63 /* utilities.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = utilities.py; path = ../flightlog/utilities.py; sourceTree = "<group>"; };
+		21E47C811736C71B003C4E63 /* initdb.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = initdb.py; path = ../flightlog/initdb.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -68,7 +69,8 @@
 				2142B73517313D05006B9252 /* auth_backend.py */,
 				2142B70E17286003006B9252 /* models.py */,
 				2142B70F17286003006B9252 /* views.py */,
-				2142B72C172868AA006B9252 /* utilities.py */,
+				21E47C801736C282003C4E63 /* utilities.py */,
+				21E47C811736C71B003C4E63 /* initdb.py */,
 				2142B72E1729DA06006B9252 /* jquery.tablesorter.js */,
 				2142B733172EFB5D006B9252 /* rank-chart.js */,
 				2142B734172EFBA7006B9252 /* test-chart.js */,
