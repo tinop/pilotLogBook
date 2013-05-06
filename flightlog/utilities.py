@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-   
+
+from datetime import date, timedelta, datetime
+
    
 def flightTimeFormatted(tot_seconds):
    hours, remainder = divmod(tot_seconds,60*60)
@@ -8,6 +9,3 @@ def flightTimeFormatted(tot_seconds):
    #return '{}:{}'.format(hours,minutes)
    return '%d:%02d' % (hours, minutes)
 
-
-def testt():
-   return 0   

@@ -15,8 +15,6 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from flightlog.models import Document
-from flightlog.forms import DocumentForm
 import pdb;
 
 
@@ -84,7 +82,8 @@ def flightlog(request):
     ## the authentication system was unable to verify the username and password
     #print("The username and password were incorrect.")
   
-  user_profile = request.user.get_profile()
+    #user_profile = request.user.get_profile()
+  user_profile = request.user.pilotUser
   expireData = user_profile.expireData
   
   print expireData
