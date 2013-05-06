@@ -1,18 +1,18 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from flightlog.models import PilotUser
+from flightlog.models import Account
 from datetime import date, timedelta, datetime
 
 
 def addUser(group, account, first_name, last_name,pwd, **kwargs):
     
-    if PilotUser.objects.filter(username=account).exists():
+    if Account.objects.filter(username=account).exists():
         logging.info('User %s already exists, skipping')
         return
     
     email = kwargs['email'] if 'email' in kwargs else '{0}.{1}@dacuda.com'.format(first_name.lower(), last_name.lower())
     
-    user = PilotUser.objects.create_user(account, email, account+'.')
+    user = Account.objects.create_user(account, email, account+'.')
     user.first_name = first_name
     user.last_name = last_name
     user.password = pwd
@@ -21,7 +21,7 @@ def addUser(group, account, first_name, last_name,pwd, **kwargs):
     user.is_staff = True
     user.save()
 
-def addPilotUser():
+def addAccount():
     # First we add the group...
     group, created = Group.objects.get_or_create(name='Pilot')
     if not created:
@@ -40,4 +40,4 @@ def addPilotUser():
 
 
 if __name__ == "__main__":
-    addPilotUser()
+    addAccount()

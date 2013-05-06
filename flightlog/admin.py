@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from flightlog.models import Flight,Aircraft,Pilot,PilotUser,User
+from flightlog.models import Flight,Aircraft,Pilot,Account,User
 
 import csv
 from django.http import HttpResponse
@@ -40,71 +40,71 @@ def export_as_csv_action(description="Export selected objects as CSV file",
 
 # Define an inline admin descriptor for Employee model
 # which acts a bit like a singleton
-class PilotUserInline(admin.StackedInline):
-    model = PilotUser
+class AccountInline(admin.StackedInline):
+    model = Account
     can_delete = False
-    verbose_name_plural = 'pilot_user'
+    verbose_name_plural = 'account'
 
 # Define a new User admin
 class UserAdmin(UserAdmin):
-    inlines = (PilotUserInline, )
+    inlines = (AccountInline, )
 
 class PilotAdmin(admin.ModelAdmin):
     
-    exclude = ('user',)
-    list_display = ('name', 'lastName','user')
+    exclude = ('owner',)
+    list_display = ('name', 'lastName','owner')
     
     def has_change_permission(self, request, obj=None):
         has_class_permission = super(PilotAdmin, self).has_change_permission(request, obj)
         if not has_class_permission:
             return False
-        if obj is not None and not request.user.is_superuser and request.user.id != obj.user.id:
+        if obj is not None and not request.user.is_superuser and request.user.id != obj.owner.id:
             return False
         return True
     
     def queryset(self, request):
         if request.user.is_superuser:
             return Pilot.objects.all()
-        return Pilot.objects.filter(user=request.user)
+        return Pilot.objects.filter(owner=request.user)
     
     def save_model(self, request, obj, form, change):
         if not change:
             #usr = UserProfile.objects.get(id=request.user.id)
-            obj.user = request.user
+            obj.owner = request.user
         obj.save()
 
 
 class AircraftAdmin(admin.ModelAdmin):
     
-    exclude = ('user',)
-    list_display = ('model', 'registration')
+    exclude = ('owner',)
+    list_display = ('registration','model','owner')
     
     def has_change_permission(self, request, obj=None):
         has_class_permission = super(AircraftAdmin, self).has_change_permission(request, obj)
         if not has_class_permission:
             return False
-        if obj is not None and not request.user.is_superuser and request.user.id != obj.user.id:
+        if obj is not None and not request.user.is_superuser and request.user.id != obj.owner.id:
             return False
         return True
     
     def queryset(self, request):
         if request.user.is_superuser:
             return Aircraft.objects.all()
-        return Aircraft.objects.filter(user=request.user)
+        return Aircraft.objects.filter(owner=request.user)
     
     def save_model(self, request, obj, form, change):
         if not change:
             #usr = UserProfile.objects.get(id=request.user.id)
-            obj.user = request.user
+            obj.owner = request.user
         obj.save()
 
-class PilotUserAdmin(admin.ModelAdmin):
+class AccountAdmin(admin.ModelAdmin):
 
     #exclude = ('user',)
     list_display = ( 'expireData','user')
     
     def has_change_permission(self, request, obj=None):
-        has_class_permission = super(PilotUserAdmin, self).has_change_permission(request, obj)
+        has_class_permission = super(AccountAdmin, self).has_change_permission(request, obj)
         if not has_class_permission:
             return False
         if obj is not None and not request.user.is_superuser and request.user.id != obj.user.id:
@@ -113,8 +113,8 @@ class PilotUserAdmin(admin.ModelAdmin):
     
     def queryset(self, request):
         if request.user.is_superuser:
-            return PilotUser.objects.all()
-        return PilotUser.objects.filter(id=request.user)
+            return Account.objects.all()
+        return Account.objects.filter(id=request.user)
     
     def save_model(self, request, obj, form, change):
         if not change:
@@ -130,40 +130,42 @@ class FlightAdmin(admin.ModelAdmin):
     #            ]
     actions = [export_as_csv_action("Export selected emails as CSV file", fields=['date','pic','aircraft'], header=False),]
 
-    exclude = ('user',)
-    list_display = ('aircraft', 'date', 'fromAirport','toAirport','departure_time','arrival_time','operation','pic','landings','night','ifr','function','remark','gpsdata')
+    exclude = ('owner',)
+    list_display = ('date', 'departure_time','fromAirport','toAirport')#'departure_time','arrival_time','aircraft','operation','pic','landings','night','ifr','function','remark','gpsdata')
     
     
-    #filter the admin dropdown 
+    #filter the admin dropdown
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "aircraft":
-            kwargs["queryset"] = Aircraft.objects.filter(user=request.user)
+            kwargs["queryset"] = Aircraft.objects.filter(owner=request.user)
+        if db_field.name == "pic":
+            kwargs["queryset"] = Pilot.objects.filter(owner=request.user)
         return super(FlightAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-        
+
     def has_change_permission(self, request, obj=None):
         has_class_permission = super(FlightAdmin, self).has_change_permission(request, obj)
         if not has_class_permission:
             return False
-        if obj is not None and not request.user.is_superuser and request.user.id != obj.user.id:
+        if obj is not None and not request.user.is_superuser and request.user.id != obj.owner.id:
             return False
         return True
     
     def queryset(self, request):
         if request.user.is_superuser:
             return Flight.objects.all()
-        return Flight.objects.filter(user=request.user)
+        return Flight.objects.filter(owner=request.user)
     
     def save_model(self, request, obj, form, change):
         if not change:
             #usr = UserProfile.objects.get(id=request.user.id)
-            obj.user = request.user
+            obj.owner = request.user
         obj.save()
 
 # Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-admin.site.register(PilotUser)
+admin.site.register(Account)
 admin.site.register(Pilot,PilotAdmin)
 admin.site.register(Flight, FlightAdmin)
 admin.site.register(Aircraft, AircraftAdmin)

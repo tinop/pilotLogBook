@@ -83,7 +83,7 @@ def flightlog(request):
     #print("The username and password were incorrect.")
   
   #user_profile = request.user.get_profile()
-  user_profile = request.user.pilotUser
+  user_profile = request.user.account
   expireData = user_profile.expireData
   #expireData = date.today()
   print expireData
@@ -96,7 +96,7 @@ def flightlog(request):
   
   sortBySuffix = '&sort=%s' % sort
   
-  flights = M.Flight.objects.filter(user=request.user)
+  flights = M.Flight.objects.filter(owner=request.user)
 
   # if page != None, we are navigating throug pages -> dont toggle the sorting
   if page is None:
@@ -153,7 +153,7 @@ def overview(request, year=None):
   #expireData = user_profile.expireData
   expireData = date.today()
   d=expireData-timedelta(days=365)
-  flights = M.Flight.objects.filter(user=request.user).filter(date__gte=d)
+  flights = M.Flight.objects.filter(owner=request.user).filter(date__gte=d)
   
   (landings_exp, flight_time_exp, flight_time_pic_exp, flight_time_dual_exp) = sumFlights(flights)
   
@@ -165,7 +165,7 @@ def overview(request, year=None):
   templateDict['flight_time_dual_exp'] = utilities.flightTimeFormatted(flight_time_dual_exp)
   
   # all flights
-  flights = M.Flight.objects.filter(user=request.user)
+  flights = M.Flight.objects.filter(owner=request.user)
   (landings_tot, flight_time_tot, flight_time_pic_tot, flight_time_dual_tot)  = sumFlights(flights)
   
   templateDict['nb_tot'] = len(flights)
@@ -190,7 +190,7 @@ def overview(request, year=None):
 
   
   #flights = M.Flight.objects.filter(date__gte=year)
-  flights = M.Flight.objects.filter(user=request.user).filter(date__year = year)
+  flights = M.Flight.objects.filter(owner=request.user).filter(date__year = year)
   (landings_y, flight_time_y, flight_time_pic_y, flight_time_dual_y)  = sumFlights(flights)
   #(landings_1y, flight_time_1y) = sumFlights(flights)
   
@@ -200,7 +200,7 @@ def overview(request, year=None):
   templateDict['flight_time_pic_y'] = utilities.flightTimeFormatted(flight_time_pic_y)
   templateDict['flight_time_dual_y'] = utilities.flightTimeFormatted(flight_time_dual_y)
   
-  firstFlight = M.Flight.objects.filter(user=request.user).order_by('date')[0]
+  firstFlight = M.Flight.objects.filter(owner=request.user).order_by('date')[0]
 
   #templateDict = {'tot_landings': tot_landings,
 				  #'tot_flight_time': utilities.flightTimeFormatted(tot_flight_time),
