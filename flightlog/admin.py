@@ -52,7 +52,7 @@ class UserAdmin(UserAdmin):
 class PilotAdmin(admin.ModelAdmin):
     
     exclude = ('user',)
-    list_display = ('name', 'lastName')
+    list_display = ('name', 'lastName','user')
     
     def has_change_permission(self, request, obj=None):
         has_class_permission = super(PilotAdmin, self).has_change_permission(request, obj)
@@ -133,6 +133,13 @@ class FlightAdmin(admin.ModelAdmin):
     exclude = ('user',)
     list_display = ('aircraft', 'date', 'fromAirport','toAirport','departure_time','arrival_time','operation','pic','landings','night','ifr','function','remark','gpsdata')
     
+    
+    #filter the admin dropdown 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "aircraft":
+            kwargs["queryset"] = Aircraft.objects.filter(user=request.user)
+        return super(FlightAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        
     def has_change_permission(self, request, obj=None):
         has_class_permission = super(FlightAdmin, self).has_change_permission(request, obj)
         if not has_class_permission:
@@ -156,7 +163,7 @@ class FlightAdmin(admin.ModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-admin.site.register(PilotUser, PilotUserAdmin)
+admin.site.register(PilotUser)
 admin.site.register(Pilot,PilotAdmin)
 admin.site.register(Flight, FlightAdmin)
 admin.site.register(Aircraft, AircraftAdmin)

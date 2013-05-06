@@ -1,20 +1,22 @@
-from django.db import models
+
+
 import datetime
 import time
-import django.contrib.auth.models
-from django.utils.timesince import timesince
+
+from django.db import models
+from django.contrib.auth.models import User
+
+#from django.utils.timesince import timesince
 from datetime import datetime, timedelta
 import utilities
-from django.db.models.signals import post_save
 
+#from django.db.models.signals import post_save
 #from datetime import datetime
-
-from django.contrib.auth.models import User, UserManager
 
 
 
 class Pilot(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='pilots')
     name = models.CharField(max_length=15)
     lastName = models.CharField(max_length=15)
     
@@ -25,9 +27,9 @@ class PilotUser(models.Model):
     #user = models.ForeignKey(User)
     #url = models.URLField("Website", blank=True)
     #company = models.CharField(max_length=50, blank=True)
-    pilot = models.ForeignKey(Pilot)
+    pilot = models.ForeignKey(Pilot, blank=True, null=True)
     expireData = models.DateField()
-    user = models.OneToOneField(User, primary_key=True)
+    user = models.OneToOneField(User, primary_key=True, related_name='pilotUser')
 
 class Aircraft(models.Model):
     MODELS = (('remosGx', 'Remos GX'),
