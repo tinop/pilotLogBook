@@ -3,6 +3,8 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+GRAPPELLI_ADMIN_TITLE = 'Pilot Logbook'
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -56,7 +58,7 @@ USE_TZ = True
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
 #MEDIA_ROOT = '/Users/tino/code/django/pilotLogBook/flightlog/media/'
-MEDIA_ROOT = '/home/tino/sources/pilotLogBook/flightlog/media/'
+MEDIA_ROOT = '/Users/tino/code/django/pilotLogBook/flightlog/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -67,7 +69,9 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/home/tino/sources/pilotLogBook/static/'
+#STATIC_ROOT = '/home/tino/sources/pilotLogBook/static/'
+#STATIC_ROOT = '/home/tino/sources/pilotLogBook/static/'
+STATIC_ROOT = '/Users/tino/code/django/pilotLogBook/static/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"

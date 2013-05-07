@@ -141,7 +141,7 @@ def flightlog(request):
 
 @login_required
 def chart(request):
-  return django.shortcuts.render(request, 'flightlog/chart.html')
+  return django.shortcuts.render(request, 'flightlog/chart3.html')
 
 @login_required
 def overview(request, year=None):

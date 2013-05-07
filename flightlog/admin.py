@@ -1,9 +1,28 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+import django.contrib.staticfiles as STATIC
 from flightlog.models import Flight,Aircraft,Pilot,Account,User
 
+import os
+import json
 import csv
 from django.http import HttpResponse
+
+def updateLandingsChart(request):
+    flights = Flight.objects.filter(owner=request.user);
+    
+    landing = dict()
+    landing['land'] = []
+    for (id, flight) in enumerate(flights, start=1):
+        landing['land'].append((id, flight.landings))
+    
+    filename = None
+    if not filename:
+        filename = os.path.join(STATIC.utils.settings.STATIC_ROOT, 'chart', 'ranks.json')
+    file = open(filename, 'w')
+    json.dump(landing, file, sort_keys=True, indent=2)
+    #json.dump(data, file)
+    file.close()
 
 def export_as_csv_action(description="Export selected objects as CSV file",
                          fields=None, exclude=None, header=True):
@@ -160,6 +179,7 @@ class FlightAdmin(admin.ModelAdmin):
             #usr = UserProfile.objects.get(id=request.user.id)
             obj.owner = request.user
         obj.save()
+        updateLandingsChart(request)
 
 # Re-register UserAdmin
 admin.site.unregister(User)

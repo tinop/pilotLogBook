@@ -14,9 +14,35 @@ Landings Evolution
 {% endblock %}
 
 {% block content %}
+<style>
+    
+    
+    svg {
+        font: 10px sans-serif;
+    }
+    
+    path {
+        fill: steelblue;
+    }
+    
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+    
+    </style>
+
 	<div class="span12 offset0 pagination-centered">
 		<div id="chart"></div>
-		<script src="{{ STATIC_URL }}chart/rank-chart.js" type="text/javascript"></script>
+		<script src="{{ STATIC_URL }}chart/chart3.js" type="text/javascript"></script>
     </div>
 </div>
 

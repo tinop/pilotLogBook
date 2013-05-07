@@ -41,8 +41,8 @@ window.onload = function() {
     d3.json("static/chart/ranks.json", function(data) {
 
         // Process lap markers..
-        data.rankMarkers = processRankMarkers(data);
-        data.offsetMarkers = processOffsets(data);
+        //data.rankMarkers = processRankMarkers(data);
+        //data.offsetMarkers = processOffsets(data);
 
         // Visualize the data.
         visualize(data);
@@ -109,7 +109,17 @@ function processOffsets(data) {
 function visualize(data) {
 
     // Configure scales.
-    configureScales(data);
+    // TP configureScales(data);
+    
+    SCALES.x = d3.scale.linear()
+    .domain([0, 6])
+    .range([INSETS.left, WIDTH - INSETS.right]);
+    
+    SCALES.y = d3.scale.linear()
+    .domain([0, 10])
+    .range([INSETS.top, HEIGHT - INSETS.bottom]);
+    
+    SCALES.clr = d3.scale.category20();
 
     var vis = d3.select('#chart')
         .append('svg:svg')
@@ -127,30 +137,23 @@ function visualize(data) {
         .style('opacity', 0.0);
 
     // Week tick-lines.
-    addWeekTickLines(vis, data.weeks.internal.length);
+    //TP addWeekTickLines(vis, data.weeks.internal.length);
 
     // Week labels.
-    addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[0] - PADDING.bottom, '0.0em', 'top');
-    addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[1] + PADDING.top, '0.35em', 'bottom');
+    //TP addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[0] - PADDING.bottom, '0.0em', 'top');
+    //TP addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[1] + PADDING.top, '0.35em', 'bottom');
 
     // Add ranking poly-lines.
-    addRankingLines(vis, data.rankings);
+    addLinesTest(vis, data);
+    //addRankingLines(vis, data.landings);
 
     // Add name labels.
-    addPlayerLabels(vis, data.rankings, false, 'initNames', SCALES.x(0) - PADDING.right, 'end')
-        .attr('y', function (d) {
-
-            return SCALES.y(d.ranks[0] - 1);
-        });
-    addPlayerLabels(vis, data.rankings, true, 'curNames', SCALES.x(data.weeks.internal.length) + PADDING.left, 'start')
-        .attr('y', function (d, i) {
-
-            return SCALES.y(i);
-        });
+    //TP addPlayerLabels(vis, data.rankings, false, 'initNames', SCALES.x(0) - PADDING.right, 'end').attr('y', function (d) {return SCALES.y(d.ranks[0] - 1);});
+    //TP addPlayerLabels(vis, data.rankings, true, 'curNames', SCALES.x(data.weeks.internal.length) + PADDING.left, 'start').attr('y', function (d, i) {            return SCALES.y(i);        });
 
     // Add markers.
-    addOffsetMarkers(vis, data.offsetMarkers, "offset");
-    addRankMarkers(vis, data.rankMarkers, "rank");
+    //TP addOffsetMarkers(vis, data.offsetMarkers, "offset");
+    //TP addRankMarkers(vis, data.rankMarkers, "rank");
 
     // Listen for clicks -> zoom.
 //     vis.selectAll('.zoom')
@@ -458,6 +461,51 @@ function addWeekLabels(vis, numWeeks, labels, y, dy, cssClass) {
         });
 }
 
+function addLinesTest(vis, ranking)
+{
+    console.log("hello")
+    console.log(ranking)
+            //var ranking = [1,3,5,4,6,5,7,6,4,6]
+             vis.selectAll('polyline.ranking')
+             .data(ranking)
+             .enter()
+             .append('svg:polyline')
+             .attr('class', 'ranking zoom')
+             .attr('points', function(d) {
+                   console.log("ss")
+                   console.log(d.land)
+                   var points = [];
+                   
+                   if (0 == 0)
+                   points.push(SCALES.x(0) + ',' + SCALES.y(d.land[0] - 1));
+                   
+                   for (var i = 0;
+                        i < d.land.length/*d.land.length*/ ;
+                        i++) {
+                   
+                   points.push(SCALES.x(i + 0.5) + ',' + SCALES.y(d.land[i] /*d.land[i][1]*/ - 1));
+                   }
+                   
+                   if (points.length > 0)
+                   points.push(SCALES.x(i ) + ',' + SCALES.y(d.land[i-1] /*d.land[i][1]*/ - 1));
+                   
+                   return points.join(' ');
+                   })
+             .style('stroke', function(d) {
+                    
+                    return SCALES.clr(d.land[1]);
+                    })
+             .on('mouseover', function(d) {
+                 
+                 highlight(vis, 'rr');
+                 })
+             .on('mouseout', function() {
+                 
+                 unhighlight(vis);
+                 });
+        
+             
+}
 // Add ranking polyline elements.
 //
 // vis: the visualization root.

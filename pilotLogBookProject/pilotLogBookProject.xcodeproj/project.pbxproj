@@ -40,9 +40,14 @@
 		2142B730172D1879006B9252 /* forms.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = forms.py; path = ../flightlog/forms.py; sourceTree = "<group>"; };
 		2142B731172D19DA006B9252 /* list.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = list.html; path = ../templates/flightlog/list.html; sourceTree = "<group>"; };
 		2142B732172D1F83006B9252 /* urls.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = urls.py; path = ../flightlog/urls.py; sourceTree = "<group>"; };
-		2142B733172EFB5D006B9252 /* rank-chart.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "rank-chart.js"; path = "../../ttrank/rank/static/chart/rank-chart.js"; sourceTree = "<group>"; };
 		2142B734172EFBA7006B9252 /* test-chart.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "test-chart.js"; path = "../../ttrank/rank/static/chart/test-chart.js"; sourceTree = "<group>"; };
 		2142B73517313D05006B9252 /* auth_backend.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = auth_backend.py; path = ../flightlog/auth_backend.py; sourceTree = "<group>"; };
+		217B995F173994C000C41B1E /* rank-chart.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "rank-chart.js"; path = "../flightlog/static/chart/rank-chart.js"; sourceTree = "<group>"; };
+		217B99611739A81200C41B1E /* rank-chart.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "rank-chart.js"; path = "../../ttrank/rank/static/chart/rank-chart.js"; sourceTree = "<group>"; };
+		217B99621739B12D00C41B1E /* chart2.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = chart2.html; path = ../templates/flightlog/chart2.html; sourceTree = "<group>"; };
+		217B99631739B16C00C41B1E /* chart2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = chart2.js; path = ../flightlog/static/chart/chart2.js; sourceTree = "<group>"; };
+		217B99641739B6A100C41B1E /* chart3.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = chart3.js; path = ../flightlog/static/chart/chart3.js; sourceTree = "<group>"; };
+		217B99651739B6BB00C41B1E /* chart3.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = chart3.html; path = ../templates/flightlog/chart3.html; sourceTree = "<group>"; };
 		21E47C801736C282003C4E63 /* utilities.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = utilities.py; path = ../flightlog/utilities.py; sourceTree = "<group>"; };
 		21E47C811736C71B003C4E63 /* initdb.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = initdb.py; path = ../flightlog/initdb.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,8 +76,10 @@
 				2142B70F17286003006B9252 /* views.py */,
 				21E47C801736C282003C4E63 /* utilities.py */,
 				21E47C811736C71B003C4E63 /* initdb.py */,
+				217B995F173994C000C41B1E /* rank-chart.js */,
+				217B99641739B6A100C41B1E /* chart3.js */,
+				217B99631739B16C00C41B1E /* chart2.js */,
 				2142B72E1729DA06006B9252 /* jquery.tablesorter.js */,
-				2142B733172EFB5D006B9252 /* rank-chart.js */,
 				2142B734172EFBA7006B9252 /* test-chart.js */,
 				2142B72D1729C12A006B9252 /* bootstrap.css */,
 			);
@@ -82,6 +89,7 @@
 		2142B729172860A3006B9252 /* ttrank */ = {
 			isa = PBXGroup;
 			children = (
+				217B99611739A81200C41B1E /* rank-chart.js */,
 				2142B72A17286128006B9252 /* templates */,
 				2142B71917286062006B9252 /* glicko.py */,
 				2142B71A1728606F006B9252 /* skilltest.py */,
@@ -116,6 +124,8 @@
 				2142B731172D19DA006B9252 /* list.html */,
 				2142B7131728602B006B9252 /* base.html */,
 				2142B7141728602B006B9252 /* chart.html */,
+				217B99621739B12D00C41B1E /* chart2.html */,
+				217B99651739B6BB00C41B1E /* chart3.html */,
 				2142B72F172B1B0A006B9252 /* dabs.html */,
 				2142B7151728602B006B9252 /* flightlog.html */,
 				2142B7161728602B006B9252 /* index.html */,

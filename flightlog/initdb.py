@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from flightlog.models import Account
 from datetime import date, timedelta, datetime
-
+from subprocess import call
+import logging
 
 def addUser(group, account, first_name, last_name,pwd, **kwargs):
     
@@ -39,5 +40,11 @@ def addAccount():
     addUser(group, 'p2', 'P2', '22','n')
 
 
-if __name__ == "__main__":
+def initdb():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    ch = logging.StreamHandler()
+    
+    logging.info('Remove DB game')
+    call(["python manage.py syncdb"])
     addAccount()
