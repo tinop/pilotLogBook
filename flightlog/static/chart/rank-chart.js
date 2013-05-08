@@ -116,7 +116,7 @@ function visualize(data) {
     .range([INSETS.left, WIDTH - INSETS.right]);
     
     SCALES.y = d3.scale.linear()
-    .domain([0, 10])
+    .domain([0, 20])
     .range([INSETS.top, HEIGHT - INSETS.bottom]);
     
     SCALES.clr = d3.scale.category20();
@@ -472,28 +472,29 @@ function addLinesTest(vis, ranking)
     .append('svg:polyline')
     .attr('class', 'ranking zoom')
     .attr('points', function(d) {
-          console.log("ss")
-          console.log(d.land)
+          console.log("flight")
+          console.log(d.landings)
           var points = [];
           
           if (0 == 0)
-          points.push(SCALES.x(0) + ',' + SCALES.y(d[0] - 1));
+          points.push(SCALES.x(0) + ',' + SCALES.y(d.landings[0] - 1));
           
           for (var i = 0;
-               i < d.length/*d.land.length*/ ;
+               i < d.landings.length/*d.land.length*/ ;
                i++){
-          
-          points.push(SCALES.x(i + 0.5) + ',' + SCALES.y(d[i] /*d.land[i][1]*/ - 1));
+          console.log("landing")
+          console.log(d.landings[i])
+          points.push(SCALES.x(i + 0.5) + ',' + SCALES.y(d.landings[i] /*d.land[i][1]*/ - 1));
           }
           
           if (points.length > 0)
-          points.push(SCALES.x(i ) + ',' + SCALES.y(d[i-1] /*d.land[i][1]*/ - 1));
+          points.push(SCALES.x(i ) + ',' + SCALES.y(d.landings[i-1] /*d.land[i][1]*/ - 1));
           
           return points.join(' ');
           })
     .style('stroke', function(d) {
            
-           return SCALES.clr(d[1]);
+           return SCALES.clr(0);
            })
     .on('mouseover', function(d) {
         

@@ -146,11 +146,11 @@ def chart(request):
     data = dict()
     flightx = []
     landings = dict()
-    landings = []
+    landings['landings'] = []
     landingsSum = 0
     for flight in flights:
         landingsSum += flight.landings
-        landings.append(landingsSum)
+        landings['landings'].append(landingsSum)
         
     flightx.append(landings)
     data['flight'] = flightx
