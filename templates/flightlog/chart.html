@@ -16,6 +16,9 @@ Landings Evolution
 {% block content %}
 	<div class="span12 offset0 pagination-centered">
 		<div id="chart"></div>
+        <script type="text/javascript">
+            data = {{ chart_data|safe }};
+            </script>
 		<script src="{{ STATIC_URL }}chart/rank-chart.js" type="text/javascript"></script>
     </div>
 </div>

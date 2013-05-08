@@ -36,41 +36,41 @@ var zoomed = false;
 // Visualize when document has loaded.
 //
 window.onload = function() {
-
+    
     // Load data.
-    d3.json("static/chart/ranks.json", function(data) {
-
-        // Process lap markers..
-        //data.rankMarkers = processRankMarkers(data);
-        //data.offsetMarkers = processOffsets(data);
-
-        // Visualize the data.
-        visualize(data);
-    });
+    //d3.json("static/chart/ranks.json", function(data) {
+    
+    // Process lap markers..
+    //data.rankMarkers = processRankMarkers(data);
+    //data.offsetMarkers = processOffsets(data);
+    
+    // Visualize the data.
+    visualize(data);
+    //});
 };
 
 function processRankMarkers(data) {
-
+    
     var markers = [];
     var p = 0;
     for (var i = 0;
          i < data.rankings.length;
          i++) {
-
+        
         var rankData = data.rankings[i];
         var ranks = rankData.ranks;
         if (ranks != undefined) {
             for (var j = 0;
                  j < ranks.length;
                  j++) {
-
+                
                 var rank = ranks[j];
                 var marker = {};
                 marker.start = rankData.ranks[0];
                 marker.week = rankData.offset + j;
                 marker.rank = rank;
                 marker.name = rankData.name;
-
+                
                 markers[p++] = marker;
             }
         }
@@ -79,23 +79,23 @@ function processRankMarkers(data) {
 }
 
 function processOffsets(data) {
-
+    
     var markers = [];
     var p = 0;
     for (var i = 0;
          i < data.rankings.length;
          i++) {
-
+        
         var rankData = data.rankings[i];
         var offset = rankData.offset;
         if (offset != undefined && offset != 0) {
-
+            
             var marker = {};
             marker.start = rankData.ranks[0];
             marker.week = offset;
             marker.rank = rankData.ranks[0];
             marker.name = rankData.name;
-
+            
             markers[p++] = marker;
         }
     }
@@ -107,7 +107,7 @@ function processOffsets(data) {
 // data the lap data object.
 //
 function visualize(data) {
-
+    
     // Configure scales.
     // TP configureScales(data);
     
@@ -120,47 +120,47 @@ function visualize(data) {
     .range([INSETS.top, HEIGHT - INSETS.bottom]);
     
     SCALES.clr = d3.scale.category20();
-
+    
     var vis = d3.select('#chart')
-        .append('svg:svg')
-        .attr('width', WIDTH)
-        .attr('height', HEIGHT)
-        .attr('class', 'zoom');
-
+    .append('svg:svg')
+    .attr('width', WIDTH)
+    .attr('height', HEIGHT)
+    .attr('class', 'zoom');
+    
     // Background rect to catch zoom clicks.
     vis.append('svg:rect')
-        .attr('class', 'zoom')
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', WIDTH)
-        .attr('height', HEIGHT)
-        .style('opacity', 0.0);
-
+    .attr('class', 'zoom')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', WIDTH)
+    .attr('height', HEIGHT)
+    .style('opacity', 0.0);
+    
     // Week tick-lines.
     //TP addWeekTickLines(vis, data.weeks.internal.length);
-
+    
     // Week labels.
     //TP addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[0] - PADDING.bottom, '0.0em', 'top');
     //TP addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[1] + PADDING.top, '0.35em', 'bottom');
-
+    
     // Add ranking poly-lines.
     addLinesTest(vis, data);
     //addRankingLines(vis, data.landings);
-
+    
     // Add name labels.
     //TP addPlayerLabels(vis, data.rankings, false, 'initNames', SCALES.x(0) - PADDING.right, 'end').attr('y', function (d) {return SCALES.y(d.ranks[0] - 1);});
     //TP addPlayerLabels(vis, data.rankings, true, 'curNames', SCALES.x(data.weeks.internal.length) + PADDING.left, 'start').attr('y', function (d, i) {            return SCALES.y(i);        });
-
+    
     // Add markers.
     //TP addOffsetMarkers(vis, data.offsetMarkers, "offset");
     //TP addRankMarkers(vis, data.rankMarkers, "rank");
-
+    
     // Listen for clicks -> zoom.
-//     vis.selectAll('.zoom')
-//         .on("click", function() {
-// 
-//             toggleZoom(vis, d3.mouse(this)[0]);
-//         });
+    //     vis.selectAll('.zoom')
+    //         .on("click", function() {
+    //
+    //             toggleZoom(vis, d3.mouse(this)[0]);
+    //         });
 }
 
 // Configure the scales.
@@ -168,15 +168,15 @@ function visualize(data) {
 // data: data set.
 //
 function configureScales(data) {
-
+    
     SCALES.x = d3.scale.linear()
-        .domain([0, data.weeks.internal.length])
-        .range([INSETS.left, WIDTH - INSETS.right]);
-
+    .domain([0, data.weeks.internal.length])
+    .range([INSETS.left, WIDTH - INSETS.right]);
+    
     SCALES.y = d3.scale.linear()
-        .domain([0, data.rankings.length - 1])
-        .range([INSETS.top, HEIGHT - INSETS.bottom]);
-
+    .domain([0, data.rankings.length - 1])
+    .range([INSETS.top, HEIGHT - INSETS.bottom]);
+    
     SCALES.clr = d3.scale.category20();
 }
 
@@ -186,55 +186,55 @@ function configureScales(data) {
 // index: index of player to highlight.
 //
 function highlight(vis, name) {
-
+    
     // Dim others.
     vis.selectAll('polyline')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', function(d) {
-
-            return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
-        });
-
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', function(d) {
+           
+           return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
+           });
+    
     vis.selectAll('circle.marker.offset')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', function(d) {
-
-            return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
-        });
-
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', function(d) {
+           
+           return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
+           });
+    
     vis.selectAll('circle.marker.rank')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', function(d) {
-
-            return d.name == name ? HIGHLIGHT_OPACITY : 0.0;
-        });
-
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', function(d) {
+           
+           return d.name == name ? HIGHLIGHT_OPACITY : 0.0;
+           });
+    
     vis.selectAll('text.label.initNames')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', function(d) {
-
-            return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
-        });
-
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', function(d) {
+           
+           return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
+           });
+    
     vis.selectAll('text.label.curNames')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', function(d) {
-
-            return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
-        });
-
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', function(d) {
+           
+           return d.name == name ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
+           });
+    
     vis.selectAll('text.label.marker')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', function(d) {
-
-            return d.name == name ? HIGHLIGHT_OPACITY : 0.0;
-        });
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', function(d) {
+           
+           return d.name == name ? HIGHLIGHT_OPACITY : 0.0;
+           });
 }
 
 // Remove highlights.
@@ -242,32 +242,32 @@ function highlight(vis, name) {
 // vis: the data visualization root.
 //
 function unhighlight(vis) {
-
+    
     // Reset opacity.
     vis.selectAll('polyline')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', HIGHLIGHT_OPACITY);
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', HIGHLIGHT_OPACITY);
     vis.selectAll('circle.marker.offset')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', HIGHLIGHT_OPACITY);
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', HIGHLIGHT_OPACITY);
     vis.selectAll('circle.marker.rank')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', 0.0);
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', 0.0);
     vis.selectAll('text.label.initNames')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', HIGHLIGHT_OPACITY);
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', HIGHLIGHT_OPACITY);
     vis.selectAll('text.label.curNames')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', HIGHLIGHT_OPACITY);
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', HIGHLIGHT_OPACITY);
     vis.selectAll('text.label.marker')
-        .transition()
-        .duration(QUICK_TRANSITION)
-        .style('opacity', 0.0);
+    .transition()
+    .duration(QUICK_TRANSITION)
+    .style('opacity', 0.0);
 }
 
 // Zoom/unzoom.
@@ -276,81 +276,81 @@ function unhighlight(vis) {
 // mouseX: x-coordinate of mouse click.
 //
 function toggleZoom(vis, mouseX) {
-
+    
     // Get week of mouse-click position.
     var week = Math.round(SCALES.x.invert(mouseX));
-
+    
     // Clamp to domain.
     var domain = SCALES.x.domain();
     week = Math.max(domain[0], Math.min(domain[1], week));
-
+    
     // Specify transform.
     var xform = zoomed ? unzoomXform : zoomXform;
     zoomed = !zoomed;
-
+    
     // Transition tick lines.
     vis.selectAll('line.tickLine')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr("x1", function(d) {
-
-            return SCALES.x(xform(d + 0.5, week))
-        })
-        .attr("x2", function(d) {
-
-            return SCALES.x(xform(d + 0.5, week))
-        });
-
+    .transition()
+    .duration(TRANSITION_DURATION)
+    .attr("x1", function(d) {
+          
+          return SCALES.x(xform(d + 0.5, week))
+          })
+    .attr("x2", function(d) {
+          
+          return SCALES.x(xform(d + 0.5, week))
+          });
+    
     // Transition tick labels.
     vis.selectAll('text.week')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr("x", function(d) {
-
-            return SCALES.x(xform(d, week))
-        });
-
+    .transition()
+    .duration(TRANSITION_DURATION)
+    .attr("x", function(d) {
+          
+          return SCALES.x(xform(d, week))
+          });
+    
     // Transition lapped elements.
     vis.selectAll('polyline.ranking')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr('points', function(d) {
-
-            var points = [];
-
-            if (d.offset == 0)
-                points.push(SCALES.x(xform(0.0, week)) + ',' + SCALES.y(d.ranks[0] - 1));
-
-            for (var i = 0;
-                 i < d.ranks.length;
-                 i++) {
-
-                points.push(SCALES.x(xform(i+d.offset+0.5, week)) + ',' + SCALES.y(d.ranks[i] - 1));
-            }
-
-            if (points.length > 0)
-                points.push(SCALES.x(xform(i + d.offset, week)) + ',' + SCALES.y(d.ranks[i - 1] - 1));
-
-            return points.join(' ');
-        });
-
+    .transition()
+    .duration(TRANSITION_DURATION)
+    .attr('points', function(d) {
+          
+          var points = [];
+          
+          if (d.offset == 0)
+          points.push(SCALES.x(xform(0.0, week)) + ',' + SCALES.y(d.ranks[0] - 1));
+          
+          for (var i = 0;
+               i < d.ranks.length;
+               i++) {
+          
+          points.push(SCALES.x(xform(i+d.offset+0.5, week)) + ',' + SCALES.y(d.ranks[i] - 1));
+          }
+          
+          if (points.length > 0)
+          points.push(SCALES.x(xform(i + d.offset, week)) + ',' + SCALES.y(d.ranks[i - 1] - 1));
+          
+          return points.join(' ');
+          });
+    
     // Transition markers (circles).
     vis.selectAll('circle.marker')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr('cx', function(d) {
-
-            return SCALES.x(xform(d.week, week));
-        });
-
+    .transition()
+    .duration(TRANSITION_DURATION)
+    .attr('cx', function(d) {
+          
+          return SCALES.x(xform(d.week, week));
+          });
+    
     // Transition markers (labels).
     vis.selectAll('text.label.marker')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr('x', function(d) {
-
-            return SCALES.x(xform(d.week, week));
-        });
+    .transition()
+    .duration(TRANSITION_DURATION)
+    .attr('x', function(d) {
+          
+          return SCALES.x(xform(d.week, week));
+          });
 }
 
 /**
@@ -367,42 +367,42 @@ function toggleZoom(vis, mouseX) {
  * @param lap the lap the user clicked on.
  */
 function zoomXform(x, lap) {
-
+    
     // The x-axis domain.
     var domain = SCALES.x.domain();
     var step = domain[1] - domain[0];
-
+    
     // What is the increment between each lap after zooming.
     var inc = lap <= domain[0] || lap >= domain[1] ?
-        step / (ZOOM_PEAK + ZOOM_SHOULDER - 2.0 + step) :
-        step / (ZOOM_PEAK + 2.0 * ZOOM_SHOULDER - 3.0 + step);
-
+    step / (ZOOM_PEAK + ZOOM_SHOULDER - 2.0 + step) :
+    step / (ZOOM_PEAK + 2.0 * ZOOM_SHOULDER - 3.0 + step);
+    
     // The zoom centre is mid-lap.
     lap += 0.5;
-
+    
     // The transformed version of x.
     var z = 0.0;
-
+    
     // Beyond upper shoulder.
     if (x > lap + 1.0) z = (x + ZOOM_PEAK + 2.0 * ZOOM_SHOULDER - 3.0) * inc;
-
+    
     // Upper shoulder.
     else if (x > lap) z = ((x - lap + 1.0) * ZOOM_SHOULDER + lap + ZOOM_PEAK - 2.0) * inc;
-
+    
     // Peak.
     else if (x > lap - 1.0) z = ((x - lap + 1.0) * ZOOM_PEAK + lap + ZOOM_SHOULDER - 2.0) * inc;
-
+    
     // Lower shoulder.
     else if (x > lap - 2.0)   z = ((x - lap + 2.0) * ZOOM_SHOULDER + lap - 2.0) * inc;
-
+    
     // Below lower shoulder.
     else z = (x - domain[0]) * inc;
-
+    
     return z;
 }
 
 function unzoomXform(x) {
-
+    
     return x;
 }
 
@@ -412,25 +412,25 @@ function unzoomXform(x) {
 // numWeeks: number of weeks to be displayed
 //
 function addWeekTickLines(vis, numWeeks) {
-
+    
     vis.selectAll('line.tickLine')
-        .data(SCALES.x.ticks(numWeeks))
-        .enter().append('svg:line')
-        .attr('class', 'tickLine zoom')
-        .attr('x1', function(d) {
-
-            return SCALES.x(d);
-        })
-        .attr('x2', function(d) {
-
-            return SCALES.x(d);
-        })
-        .attr('y1', SCALES.y.range()[0] - TICK_MARK_LENGTH)
-        .attr('y2', SCALES.y.range()[1] + TICK_MARK_LENGTH)
-        .attr('visibility', function(d) {
-
-            return d <= numWeeks ? 'visible' : 'hidden'
-        });
+    .data(SCALES.x.ticks(numWeeks))
+    .enter().append('svg:line')
+    .attr('class', 'tickLine zoom')
+    .attr('x1', function(d) {
+          
+          return SCALES.x(d);
+          })
+    .attr('x2', function(d) {
+          
+          return SCALES.x(d);
+          })
+    .attr('y1', SCALES.y.range()[0] - TICK_MARK_LENGTH)
+    .attr('y2', SCALES.y.range()[1] + TICK_MARK_LENGTH)
+    .attr('visibility', function(d) {
+          
+          return d <= numWeeks ? 'visible' : 'hidden'
+          });
 }
 
 // Add week labels.
@@ -443,68 +443,70 @@ function addWeekTickLines(vis, numWeeks) {
 // cssClass: CSS class id.
 //
 function addWeekLabels(vis, numWeeks, labels, y, dy, cssClass) {
-
+    
     vis.selectAll('text.week.' + cssClass)
-        .data(SCALES.x.ticks(numWeeks))
-        .enter().append('svg:text')
-        .attr('class', 'week ' + cssClass + ' zoom')
-        .attr('x', function(d) {
-
-            return SCALES.x(d - 0.5);
-        })
-        .attr('y', y)
-        .attr('dy', dy)
-        .attr('text-anchor', 'middle')
-        .text(function(d, i) {
-
-            return (i > 0 && i <= labels.length) ? labels[i-1] : '';
-        });
+    .data(SCALES.x.ticks(numWeeks))
+    .enter().append('svg:text')
+    .attr('class', 'week ' + cssClass + ' zoom')
+    .attr('x', function(d) {
+          
+          return SCALES.x(d - 0.5);
+          })
+    .attr('y', y)
+    .attr('dy', dy)
+    .attr('text-anchor', 'middle')
+    .text(function(d, i) {
+          
+          return (i > 0 && i <= labels.length) ? labels[i-1] : '';
+          });
 }
 
 function addLinesTest(vis, ranking)
 {
-    console.log("hello")
+    console.log("hellos")
     console.log(ranking)
-            //var ranking = [1,3,5,4,6,5,7,6,4,6]
-             vis.selectAll('polyline.ranking')
-             .data(ranking)
-             .enter()
-             .append('svg:polyline')
-             .attr('class', 'ranking zoom')
-             .attr('points', function(d) {
-                   console.log("ss")
-                   console.log(d.land)
-                   var points = [];
-                   
-                   if (0 == 0)
-                   points.push(SCALES.x(0) + ',' + SCALES.y(d.land[0] - 1));
-                   
-                   for (var i = 0;
-                        i < d.land.length/*d.land.length*/ ;
-                        i++) {
-                   
-                   points.push(SCALES.x(i + 0.5) + ',' + SCALES.y(d.land[i] /*d.land[i][1]*/ - 1));
-                   }
-                   
-                   if (points.length > 0)
-                   points.push(SCALES.x(i ) + ',' + SCALES.y(d.land[i-1] /*d.land[i][1]*/ - 1));
-                   
-                   return points.join(' ');
-                   })
-             .style('stroke', function(d) {
-                    
-                    return SCALES.clr(d.land[1]);
-                    })
-             .on('mouseover', function(d) {
-                 
-                 highlight(vis, 'rr');
-                 })
-             .on('mouseout', function() {
-                 
-                 unhighlight(vis);
-                 });
+    //var ranking = [1,3,5,4,6,5,7,6,4,6]
+    vis.selectAll('polyline.ranking')
+    .data(ranking)
+    .enter()
+    .append('svg:polyline')
+    .attr('class', 'ranking zoom')
+    .attr('points', function(d) {
+          console.log("ss")
+          console.log(d.land)
+          var points = [];
+          
+          if (0 == 0)
+          points.push(SCALES.x(0) + ',' + SCALES.y(d[0] - 1));
+          
+          for (var i = 0;
+               i < d.length/*d.land.length*/ ;
+               i++){
+          
+          points.push(SCALES.x(i + 0.5) + ',' + SCALES.y(d[i] /*d.land[i][1]*/ - 1));
+          }
+          
+          if (points.length > 0)
+          points.push(SCALES.x(i ) + ',' + SCALES.y(d[i-1] /*d.land[i][1]*/ - 1));
+          
+          return points.join(' ');
+          })
+    .style('stroke', function(d) {
+           
+           return SCALES.clr(d[1]);
+           })
+    .on('mouseover', function(d) {
         
-             
+        highlight(vis, 'rr');
+        })
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
+        });
+    
+    console.log('helloend')
+    
+    
 }
 // Add ranking polyline elements.
 //
@@ -512,42 +514,42 @@ function addLinesTest(vis, ranking)
 // ranks: ranking data.
 //
 function addRankingLines(vis, rankings) {
-
+    
     vis.selectAll('polyline.ranking')
-        .data(rankings)
-        .enter()
-        .append('svg:polyline')
-        .attr('class', 'ranking zoom')
-        .attr('points', function(d) {
-
-            var points = [];
-
-            if (d.offset == 0)
-                points.push(SCALES.x(0) + ',' + SCALES.y(d.ranks[0] - 1));
-
-            for (var i = 0;
-                 i < d.ranks.length;
-                 i++) {
-
-                points.push(SCALES.x(i+d.offset + 0.5) + ',' + SCALES.y(d.ranks[i] - 1));
-            }
-
-            if (points.length > 0)
-                points.push(SCALES.x(i + d.offset) + ',' + SCALES.y(d.ranks[i - 1] - 1));
-
-            return points.join(' ');
+    .data(rankings)
+    .enter()
+    .append('svg:polyline')
+    .attr('class', 'ranking zoom')
+    .attr('points', function(d) {
+          
+          var points = [];
+          
+          if (d.offset == 0)
+          points.push(SCALES.x(0) + ',' + SCALES.y(d.ranks[0] - 1));
+          
+          for (var i = 0;
+               i < d.ranks.length;
+               i++) {
+          
+          points.push(SCALES.x(i+d.offset + 0.5) + ',' + SCALES.y(d.ranks[i] - 1));
+          }
+          
+          if (points.length > 0)
+          points.push(SCALES.x(i + d.offset) + ',' + SCALES.y(d.ranks[i - 1] - 1));
+          
+          return points.join(' ');
+          })
+    .style('stroke', function(d) {
+           
+           return SCALES.clr(d.ranks[0]);
+           })
+    .on('mouseover', function(d) {
+        
+        highlight(vis, d.name);
         })
-        .style('stroke', function(d) {
-
-            return SCALES.clr(d.ranks[0]);
-        })
-        .on('mouseover', function(d) {
-
-            highlight(vis, d.name);
-        })
-        .on('mouseout', function() {
-
-            unhighlight(vis);
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
         });
 }
 
@@ -560,30 +562,30 @@ function addRankingLines(vis, rankings) {
 // textAnchor: text-anchor value.
 //
 function addPlayerLabels(vis, rankings, showAllPlayers, cssClass, x, textAnchor) {
-
+    
     return vis.selectAll('text.label.' + cssClass)
-        .data(rankings)
-        .enter()
-        .append('svg:text')
-        .attr('class', 'label ' + cssClass)
-        .attr('x', x)
-        .attr('dy', '0.35em')
-        .attr('text-anchor', textAnchor)
-        .text(function(d) {
-
-            return (showAllPlayers || d.offset == 0) ? d.name : '';
+    .data(rankings)
+    .enter()
+    .append('svg:text')
+    .attr('class', 'label ' + cssClass)
+    .attr('x', x)
+    .attr('dy', '0.35em')
+    .attr('text-anchor', textAnchor)
+    .text(function(d) {
+          
+          return (showAllPlayers || d.offset == 0) ? d.name : '';
+          })
+    .style('fill', function(d) {
+           
+           return SCALES.clr(d.ranks[0]);
+           })
+    .on('mouseover', function(d) {
+        
+        highlight(vis, d.name);
         })
-        .style('fill', function(d) {
-
-            return SCALES.clr(d.ranks[0]);
-        })
-        .on('mouseover', function(d) {
-
-            highlight(vis, d.name);
-        })
-        .on('mouseout', function() {
-
-            unhighlight(vis);
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
         });
 }
 
@@ -594,63 +596,63 @@ function addPlayerLabels(vis, rankings, showAllPlayers, cssClass, x, textAnchor)
 // class: marker sub-class.
 //
 function addRankMarkers(vis, data, cssClass) {
-
+    
     // Place circle glyph.
     vis.selectAll("circle.marker." + cssClass)
-        .data(data)
-        .enter()
-        .append("svg:circle")
-        .attr("class", "marker " + cssClass + " zoom")
-        .attr("cx", function(d) {
-
-            return SCALES.x(d.week + 0.5);
+    .data(data)
+    .enter()
+    .append("svg:circle")
+    .attr("class", "marker " + cssClass + " zoom")
+    .attr("cx", function(d) {
+          
+          return SCALES.x(d.week + 0.5);
+          })
+    .attr("cy", function(d) {
+          
+          return SCALES.y(d.rank - 1);
+          })
+    .attr("r", MARKER_RADIUS)
+    .style("fill", function(d) {
+           
+           return SCALES.clr(d.start);
+           })
+    .style('opacity', 0.0)
+    .on('mouseover', function(d) {
+        
+        highlight(vis, d.name);
         })
-        .attr("cy", function(d) {
-
-            return SCALES.y(d.rank - 1);
-        })
-        .attr("r", MARKER_RADIUS)
-        .style("fill", function(d) {
-
-            return SCALES.clr(d.start);
-        })
-        .style('opacity', 0.0)
-        .on('mouseover', function(d) {
-
-            highlight(vis, d.name);
-        })
-        .on('mouseout', function() {
-
-            unhighlight(vis);
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
         });
-
+    
     // Place text.
     vis.selectAll("text.label.marker." + cssClass)
-        .data(data)
-        .enter()
-        .append("svg:text")
-        .attr("class", "label marker " + cssClass + " zoom")
-        .attr("x", function(d) {
-
-            return SCALES.x(d.week + 0.5);
+    .data(data)
+    .enter()
+    .append("svg:text")
+    .attr("class", "label marker " + cssClass + " zoom")
+    .attr("x", function(d) {
+          
+          return SCALES.x(d.week + 0.5);
+          })
+    .attr("y", function(d) {
+          
+          return SCALES.y(d.rank - 1);
+          })
+    .attr("dy", "0.35em")
+    .attr("text-anchor", "middle")
+    .style('opacity', 0.0)
+    .text(function(d) {
+          return d.rank
+          })
+    .on('mouseover', function(d) {
+        
+        highlight(vis, d.name);
         })
-        .attr("y", function(d) {
-
-            return SCALES.y(d.rank - 1);
-        })
-        .attr("dy", "0.35em")
-        .attr("text-anchor", "middle")
-        .style('opacity', 0.0)
-        .text(function(d) {
-            return d.rank
-        })
-        .on('mouseover', function(d) {
-
-            highlight(vis, d.name);
-        })
-        .on('mouseout', function() {
-
-            unhighlight(vis);
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
         });
 }
 
@@ -661,59 +663,59 @@ function addRankMarkers(vis, data, cssClass) {
 // class: marker sub-class.
 //
 function addOffsetMarkers(vis, data, cssClass) {
-
+    
     // Place circle glyph.
     vis.selectAll("circle.marker." + cssClass)
-        .data(data)
-        .enter()
-        .append("svg:circle")
-        .attr("class", "marker " + cssClass + " zoom")
-        .attr("cx", function(d) {
-
-            return SCALES.x(d.week + 0.5);
+    .data(data)
+    .enter()
+    .append("svg:circle")
+    .attr("class", "marker " + cssClass + " zoom")
+    .attr("cx", function(d) {
+          
+          return SCALES.x(d.week + 0.5);
+          })
+    .attr("cy", function(d) {
+          
+          return SCALES.y(d.rank - 1);
+          })
+    .attr("r", 0.6*MARKER_RADIUS)
+    .style("fill", function(d) {
+           
+           return SCALES.clr(d.start);
+           })
+    .on('mouseover', function(d) {
+        
+        highlight(vis, d.name);
         })
-        .attr("cy", function(d) {
-
-            return SCALES.y(d.rank - 1);
-        })
-        .attr("r", 0.6*MARKER_RADIUS)
-        .style("fill", function(d) {
-
-            return SCALES.clr(d.start);
-        })
-        .on('mouseover', function(d) {
-
-            highlight(vis, d.name);
-        })
-        .on('mouseout', function() {
-
-            unhighlight(vis);
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
         });
 }
 
 // Gets the window dimensions.
 //
 function getWindowDimensions() {
-
+    
     var width = 940;
     var height = 640;
-//     if (document.body && document.body.offsetWidth) {
-// 
-//         width = document.body.offsetWidth;
-//         height = document.body.offsetHeight;
-//     }
-// 
-//     if (document.compatMode == 'CSS1Compat' && document.documentElement && document.documentElement.offsetWidth) {
-// 
-//         width = document.documentElement.offsetWidth;
-//         height = document.documentElement.offsetHeight;
-//     }
-// 
-//     if (window.innerWidth && window.innerHeight) {
-// 
-//         width = window.innerWidth;
-//         height = window.innerHeight;
-//     }
-
+    //     if (document.body && document.body.offsetWidth) {
+    //
+    //         width = document.body.offsetWidth;
+    //         height = document.body.offsetHeight;
+    //     }
+    //
+    //     if (document.compatMode == 'CSS1Compat' && document.documentElement && document.documentElement.offsetWidth) {
+    //
+    //         width = document.documentElement.offsetWidth;
+    //         height = document.documentElement.offsetHeight;
+    //     }
+    //
+    //     if (window.innerWidth && window.innerHeight) {
+    //
+    //         width = window.innerWidth;
+    //         height = window.innerHeight;
+    //     }
+    
     return {'width': width, 'height': height};
 }
