@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^overview/(?P<year>\d+)/', 'flightlog.views.overview'),
     
     url(r'^flightlog.html', 'flightlog.views.flightlog'),
+    url(r'^landings_chart.html', 'flightlog.views.landings_chart'),
     url(r'^chart.html', 'flightlog.views.chart'),
     url(r'^overview.html', 'flightlog.views.overview'),
     url(r'^dabs.html', 'flightlog.views.dabs'),

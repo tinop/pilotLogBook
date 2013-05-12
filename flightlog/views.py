@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import json
+import csv
 
 
 from django.template import RequestContext
@@ -142,7 +143,9 @@ def flightlog(request):
 
 @login_required
 def chart(request):
-    flights = M.Flight.objects.filter(owner=request.user)
+    flights = M.Flight.objects.filter(owner=request.user).order_by('date')
+    
+    #json file for rank-chart
     data = dict()
     flightx = []
     landings = dict()
@@ -151,7 +154,7 @@ def chart(request):
     for flight in flights:
         landingsSum += flight.landings
         landings['landings'].append(landingsSum)
-        
+
     flightx.append(landings)
     data['flight'] = flightx
     
@@ -159,8 +162,51 @@ def chart(request):
     
     with open('flightData.txt', 'w') as outfile:
         json.dump(flightData, outfile)
-  
+            
     return django.shortcuts.render(request, 'flightlog/chart.html', {'chart_data' : flightData })
+
+@login_required
+def landings_chart(request):
+    flights = M.Flight.objects.filter(owner=request.user).order_by('date')
+    
+    #json file for rank-chart
+#    data = dict()
+#    flightx = []
+#    landings = dict()
+#    landings['landings'] = []
+#    landingsSum = 0
+#    for flight in flights:
+#        landingsSum += flight.landings
+#        landings['landings'].append(landingsSum)
+#        
+#    flightx.append(landings)
+#    data['flight'] = flightx
+#    
+#    flightData =  json.dumps(flightx)
+#    
+#    with open('flightData.txt', 'w') as outfile:
+#        json.dump(flightData, outfile)
+  
+    #csv for chart3 / landings_evoltion
+    
+    landingsSum = 0
+    with open('flightlog/static/chart/landings.csv', 'wb') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_NONE)
+        
+        spamwriter.writerow(['date'] + ['price'])
+        for flight in flights:
+            landingsSum += flight.landings
+            spamwriter.writerow([flight.date.strftime('%d %m %Y')] + [landingsSum])
+
+    
+#writer = csv.writer(ofile, delimiter='\t', quotechar='"', quoting=csv.QUOTE_ALL)
+
+#for row in reader:
+#   writer.writerow(row)
+    flightData = []
+    
+    return django.shortcuts.render(request, 'flightlog/landings_evolution.html', {'chart_data' : flightData })
 
 @login_required
 def overview(request, year=None):

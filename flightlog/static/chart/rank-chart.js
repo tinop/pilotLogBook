@@ -138,10 +138,12 @@ function visualize(data) {
     
     // Week tick-lines.
     //TP addWeekTickLines(vis, data.weeks.internal.length);
+    addVertLines(vis, data[0].landings.length)
     
     // Week labels.
     //TP addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[0] - PADDING.bottom, '0.0em', 'top');
     //TP addWeekLabels(vis, data.weeks.internal.length, data.weeks.labels, SCALES.y.range()[1] + PADDING.top, '0.35em', 'bottom');
+    addLabels(vis, data[0].landings, SCALES.y.range()[0] - PADDING.bottom, '0.0em', 'top');
     
     // Add ranking poly-lines.
     addLinesTest(vis, data);
@@ -154,6 +156,7 @@ function visualize(data) {
     // Add markers.
     //TP addOffsetMarkers(vis, data.offsetMarkers, "offset");
     //TP addRankMarkers(vis, data.rankMarkers, "rank");
+    addMarkers(vis,data.landings,"rank");
     
     // Listen for clicks -> zoom.
     //     vis.selectAll('.zoom')
@@ -432,6 +435,28 @@ function addWeekTickLines(vis, numWeeks) {
           return d <= numWeeks ? 'visible' : 'hidden'
           });
 }
+//
+function addVertLines(vis, nbFlights) {
+    
+    vis.selectAll('line.tickLine')
+    .data(SCALES.x.ticks(nbFlights))
+    .enter().append('svg:line')
+    .attr('class', 'tickLine zoom')
+    .attr('x1', function(d) {
+          
+          return SCALES.x(d);
+          })
+    .attr('x2', function(d) {
+          
+          return SCALES.x(d);
+          })
+    .attr('y1', SCALES.y.range()[0] - TICK_MARK_LENGTH)
+    .attr('y2', SCALES.y.range()[1] + TICK_MARK_LENGTH)
+    .attr('visibility', function(d) {
+          
+          return d <= nbFlights ? 'visible' : 'hidden'
+          });
+}
 
 // Add week labels.
 //
@@ -458,6 +483,25 @@ function addWeekLabels(vis, numWeeks, labels, y, dy, cssClass) {
     .text(function(d, i) {
           
           return (i > 0 && i <= labels.length) ? labels[i-1] : '';
+          });
+}
+
+function addLabels(vis, landings, y, dy, cssClass) {
+    
+    vis.selectAll('text.week.' + cssClass)
+    .data(SCALES.x.ticks(landings.length))
+    .enter().append('svg:text')
+    .attr('class', 'week ' + cssClass + ' zoom')
+    .attr('x', function(d) {
+          
+          return SCALES.x(d - 0.5);
+          })
+    .attr('y', y)
+    .attr('dy', dy)
+    .attr('text-anchor', 'middle')
+    .text(function(d, i) {
+          
+          return (i > 0 && i <= landings.length) ? i : '';
           });
 }
 
@@ -650,6 +694,67 @@ function addRankMarkers(vis, data, cssClass) {
     .on('mouseover', function(d) {
         
         highlight(vis, d.name);
+        })
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
+        });
+}
+
+function addMarkers(vis, data, cssClass) {
+    
+    // Place circle glyph.
+    vis.selectAll("circle.marker." + cssClass)
+    .data(data[0].landings)
+    .enter()
+    .append("svg:circle")
+    .attr("class", "marker " + cssClass + " zoom")
+    .attr("cx", function(d,i) {
+          
+          return SCALES.x(i + 0.5);
+          })
+    .attr("cy", function(d) {
+          
+          return SCALES.y(d - 1);
+          })
+    .attr("r", MARKER_RADIUS)
+    .style("fill", function(d) {
+           
+           return SCALES.clr(0);
+           })
+    .style('opacity', 0.0)
+    .on('mouseover', function(d) {
+        
+        highlight(vis, 'name');
+        })
+    .on('mouseout', function() {
+        
+        unhighlight(vis);
+        });
+    
+    // Place text.
+    vis.selectAll("text.label.marker." + cssClass)
+    .data(data)
+    .enter()
+    .append("svg:text")
+    .attr("class", "label marker " + cssClass + " zoom")
+    .attr("x", function(d,i) {
+          
+          return SCALES.x(i + 0.5);
+          })
+    .attr("y", function(d) {
+          
+          return SCALES.y(d - 1);
+          })
+    .attr("dy", "0.35em")
+    .attr("text-anchor", "middle")
+    .style('opacity', 0.0)
+    .text(function(d) {
+          return d
+          })
+    .on('mouseover', function(d) {
+        
+        highlight(vis, 'name');
         })
     .on('mouseout', function() {
         
