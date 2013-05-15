@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^chart.html', 'flightlog.views.chart'),
     url(r'^overview.html', 'flightlog.views.overview'),
     url(r'^dabs.html', 'flightlog.views.dabs'),
+    url(r'^piechart.html', 'flightlog.views.chart_nvd3'),
    
     #(r'^', include('flightlog.urls')),
     

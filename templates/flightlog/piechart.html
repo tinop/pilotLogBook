@@ -1,0 +1,27 @@
+{% extends "flightlog/base.html" %}
+
+{% load nvd3_tags %}
+
+{% block title %}Flight Log{% endblock %}
+
+{% block navigation_log %}class="active"{% endblock %}
+
+{% block content_header %}
+<div class="page-header">
+	<h1>Flight Log</h1>
+    <p class="lead"> {{ user.username}}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<head>
+    <!-- code to include the NVD3 and D3 libraries goes here -->
+    <!-- load_nvd3 filter takes a comma-separated list of id's where -->
+    <!-- the charts need to be rendered to                             -->
+    {% include_nvd3jscss %}
+    {% load_chart charttype chartdata "linewithfocuschart_container" True "%d %b %Y %H" %}
+</head>
+<body>
+    {% include_container "linewithfocuschart_container" 400 '100%' %}
+</body>
+{% endblock %}

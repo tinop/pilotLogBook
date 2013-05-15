@@ -11,7 +11,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import json
 import csv
-
+import time
+import datetime
+import random
 
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -165,6 +167,62 @@ def chart(request):
             
     return django.shortcuts.render(request, 'flightlog/chart.html', {'chart_data' : flightData })
 
+@login_required
+def chart_nvd3(request):
+  
+    flights = M.Flight.objects.filter(owner=request.user).order_by('date')
+  
+  
+    """
+    linewithfocuschart page
+    """
+    nb_element = 100
+    start_time = int(time.mktime(datetime.datetime(2012, 6, 1).timetuple()) * 1000)
+
+    totTime = [0]
+    dualTime = [0]
+    picTime = [0]
+    landings = [30]
+    landingsSum = 0
+    
+    for flight in flights:
+        landingsSum += flight.landings
+        landings.append(landings[len(landings)-1] + flight.landings)
+        dualTime.append(dualTime[len(dualTime)-1] + flight.flightTime()/60/60)
+        
+    
+    xdata = range(len(flights)+1)
+    #xdata = map(lambda x: start_time + x * 1000000000, xdata)
+    ydata = [i + random.randint(1, 10) for i in range(nb_element)]
+    ydata2 = map(lambda x: x * 2, ydata)
+    ydata3 = map(lambda x: x * 3, ydata)
+    ydata4 = map(lambda x: x * 4, ydata)
+    
+    #xdata = landings;
+    ydata = landings;
+    ydata2 = dualTime;
+    ydata3 = [2,1,2,1,2];
+
+    ydata4 = [2,1,2,1,2];
+    #tooltip_date = "%d %b %Y %H:%M:%S %p"
+    tooltip_date = "%d %b %Y"
+    extra_serie = {"tooltip": {"y_start": "", "y_end": " landings"},
+                   "date_format": tooltip_date}
+
+    chartdata = {
+        'x': xdata,
+        'name1': 'Landings', 'y1': ydata, 'extra1': extra_serie,
+        'name2': 'Flight time', 'y2': ydata2, 'extra2': extra_serie,
+        #'name3': 'series 3', 'y3': ydata3, 'extra3': extra_serie,
+        #'name4': 'series 4', 'y4': ydata4, 'extra4': extra_serie
+    }
+    charttype = "lineWithFocusChart"
+    data = {
+        'charttype': charttype,
+        'chartdata': chartdata
+    }
+    return django.shortcuts.render(request,'flightlog/piechart.html', data)
+    
 @login_required
 def landings_chart(request):
     flights = M.Flight.objects.filter(owner=request.user).order_by('date')
