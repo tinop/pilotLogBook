@@ -4,13 +4,16 @@
 
 {% block additional_styles %}
     <link href="{{ STATIC_URL }}chart/style.css" media="screen" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <!-- script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script-->
 {% endblock %}
 
 {% block navigation_chart %}class="active"{% endblock %}
 
 {% block content_page_header %}
-Landings Evolution
+<div class="page-header">
+	<h1>Landings Evolution</h1>
+    <p class="lead">landings_evolution.js</p>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -50,7 +53,7 @@ Landings Evolution
         <script type="text/javascript">
             data = {{ chart_data|safe }};
         </script>
-		<script src="{{ STATIC_URL }}chart/landings_evolution.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}chart/landings_evolution.js" type="text/javascript"></script>
     </div>
 </div>
 
