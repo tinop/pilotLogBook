@@ -52,6 +52,13 @@ text {
 */
 }
 
+    #chart3 svg {
+        height: 500px;
+        margin: 10px;
+        min-width: 100px;
+        min-height: 100px;
+  
+        
 </style>
 <body>
 <h2>Test1</h2>
@@ -68,9 +75,13 @@ text {
   <div id="chart2">
     <svg> </svg>
   </div>
+    
+    <div id="chart3">
+        <svg> </svg>
+    </div>
 
 <script>
-
+  
   var testdata = [
     {
       key: "One",
@@ -219,7 +230,7 @@ nv.addGraph(function() {
 
 // bar/line + focus
 
-var testdata2 = [
+var testdata2x = [
   {
     "key" : "Quantity" ,
     "bar": true,
@@ -233,6 +244,22 @@ var testdata2 = [
   series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
   return series;
 });
+   
+landData = {{ graphLand|safe }};
+var testdata2 = landData.map(function(series) {
+    series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
+                return series;
+                 });
+
+    landData[0].type = 'bar'
+    landData[1].type = 'bar'
+    landData[2].type = 'bar'
+    landData[0].yAxis = 1
+    landData[1].yAxis = 1
+    landData[2].yAxis = 1
+   // landData[0]['bar']=false
+   // landData[1]['bar']=true
+   // landData[2]['bar']=true
 
 
 /*
@@ -253,8 +280,39 @@ var testdata = [
 });
 */
 
+timeData = {{ templateDict|safe }};
+ 
+var testdata2x = [{
+                    "key" : "totTime" ,
+                   "type": "line",
+                "yAxis":1,
+                    "values" : timeData.totTime
+                    } ,
+                {
+                "key" : "flightTime" ,
+                "type": "bar",
+                  "bar":true,
+                "yAxis":2,
+                "values" : timeData.flightTime
+                } ,/*
+                      {
+                      "key" : "dualTime" ,
+                      "type": "area",
+                      "yAxis":1,
+                      "values" : timeData.dualTime
+                      },*/
+                    ].map(function(series) {
+                          series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
+                          return series;
+                          });
 
-
+    /*timeData.totTime.type = 'bar'
+    timeData.picTime.type = 'bar'
+    timeData.dualTime.type = 'bar'
+    timeData.totTime.yAxis = 1
+    timeData.dualTime.yAxis = 1
+    timeData.picTime.yAxis = 1
+*/
 nv.addGraph(function() {
     var chart = nv.models.linePlusBarWithFocusChart()
         .margin({top: 30, right: 60, bottom: 50, left: 70})
@@ -263,7 +321,7 @@ nv.addGraph(function() {
 
     chart.xAxis.tickFormat(function(d) {
 
-      var dx = testdata2[0].values[d] && testdata2[0].values[d].x || 0;
+      var dx = testdata2x[0].values[d] && testdata2x[0].values[d].x || 0;
       if (dx > 0) {
           return d3.time.format('%x')(new Date(dx))
       }
@@ -271,7 +329,7 @@ nv.addGraph(function() {
     });
 
     chart.x2Axis.tickFormat(function(d) {
-      var dx = testdata2[0].values[d] && testdata2[0].values[d].x || 0;
+      var dx = testdata2x[0].values[d] && testdata2x[0].values[d].x || 0;
       return d3.time.format('%x')(new Date(dx))
     });
     
@@ -290,15 +348,65 @@ nv.addGraph(function() {
     chart.bars.forceY([0]);
     chart.bars2.forceY([0]);
     //chart.lines.forceY([0]);
-    nv.log(testdata2);
+    nv.log(testdata2x);
     d3.select('#chart2 svg')
-        .datum(testdata2)
+        .datum(testdata2x)
       .transition().duration(500).call(chart);
 
 //    nv.utils.windowResize(chart.update);
 
     return chart;
 });
+    
+    nv.addGraph(function() {
+                var chart = nv.models.multiChart()
+                .margin({top: 30, right: 60, bottom: 50, left: 70})
+                .x(function(d,i) { return i })
+                .color(d3.scale.category10().range());
+                /*
+                chart.xAxis.tickFormat(function(d) {
+                                       
+                                       var dx = testdata2[0].values[d] && testdata2[0].values[d].x || 0;
+                                       if (dx > 0) {
+                                       return d3.time.format('%x')(new Date(dx))
+                                       }
+                                       return null;
+                                       });
+                
+*/
+                chart.xAxis.tickFormat(function(d) {
+                                       
+                                       var dx = timeDataFormat[0].values[d] && timeDataFormat[0].values[d].x || 0;
+                                       if (dx > 0) {
+                                       return d3.time.format('%x')(new Date(dx))
+                                       }
+                                       return null;
+                                       });
+                
+                chart.yAxis1.tickFormat(d3.format(',f'));
+                //chart.yAxis2.Format(function(d) { return '$' + d3.format(',.2f')(d) });
+                //chart.bars.forceY([0]);
+                
+                /*
+                chart.x2Axis.tickFormat(function(d) {
+                 var dx = testdata2[0].values[d] && testdata2[0].values[d].x || 0;
+                 return d3.time.format('%x')(new Date(dx))
+                 });
+                 
+                chart.y3Axis.Format(d3.format(',f'));
+                chart.y4Axis.Format(function(d) { return '$' + d3.format(',.2f')(d) });
+                chart.bars2.forceY([0]);
+                */
+                //chart.lines.forceY([0]);
+                nv.log(testdata2);
+                d3.select('#chart3 svg')
+                .datum(timeDataFormat)
+                .transition().duration(500).call(chart);
+                
+                    nv.utils.windowResize(chart.update);
+                
+                return chart;
+                });
 
 </script>
 

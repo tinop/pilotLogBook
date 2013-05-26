@@ -19,10 +19,10 @@ def updateLandingsChart(request):
     filename = None
     if not filename:
         filename = os.path.join(STATIC.utils.settings.STATIC_ROOT, 'chart', 'ranks.json')
-    file = open(filename, 'w')
-    json.dump(landing, file, sort_keys=True, indent=2)
-    #json.dump(data, file)
-    file.close()
+#   file = open(filename, 'w')
+#   json.dump(landing, file, sort_keys=True, indent=2)
+##json.dump(data, file)
+#   file.close()
 
 def export_as_csv_action(description="Export selected objects as CSV file",
                          fields=None, exclude=None, header=True):

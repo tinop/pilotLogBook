@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import flightlog.models as M
 import utilities
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta, datetime, time
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -185,11 +185,75 @@ def chart_nvd3(request):
     landings = [30]
     landingsSum = 0
     
+    templateDict = dict();
+    templateDict['picTime'] = []
+    templateDict['dualTime'] = []
+    templateDict['totTime'] = []
+    templateDict['flightTime'] = []
+    picTimeSum = 0
+    dualTimeSum = 0
+    totTimeSum = 0
+    
+    datax = []
+    graphLand = dict()
+    graphLand['key'] = 'Landings'
+    graphLand['bar'] = ''
+    graphLand['values'] = []
+    
+    flightTimeData= dict()
+    flightTimeData['key'] = 'Total Flight Time'
+    flightTimeData['bar'] = ''
+    flightTimeData['values'] = []
+    
+    picTimeData= dict()
+    picTimeData['key'] = 'PIC Flight Time'
+    picTimeData['bar'] = ''
+    picTimeData['values'] = []
+    
+    dualTimeData= dict()
+    dualTimeData['key'] = 'Dual Flight Time'
+    dualTimeData['bar'] = ''
+    dualTimeData['values'] = []
+    
+    startTime = datetime.datetime(2012, 6, 1)
+    stopTime = datetime.datetime(2013, 6, 1)
+    base = datetime.datetime.today()
+    dateList = [ int(time.mktime((base - datetime.timedelta(days=x)).timetuple()))*1000 for x in range(0,10) ]
+
+    for d in dateList:
+        templateDict['flightTime'].append([d, 30])
+
     for flight in flights:
+        date = int(time.mktime(flight.date.timetuple())) * 1000
+        graphLand['values'].append([date, flight.landings])
+        flightTimeData['values'].append([date, flight.flightTime()])
+        
         landingsSum += flight.landings
         landings.append(landings[len(landings)-1] + flight.landings)
         dualTime.append(dualTime[len(dualTime)-1] + flight.flightTime()/60/60)
+    
+        totTimeSum = totTimeSum + flight.flightTime()
+        templateDict['totTime'].append([date, totTimeSum])
+        templateDict['flightTime'].append([date, flight.flightTime()])
+
+    pic = flights.filter(function = "pic")
+    for flight in pic:
+        date = int(time.mktime(flight.date.timetuple())) * 1000
+        picTimeData['values'].append([date, flight.flightTime()])
         
+        picTimeSum = picTimeSum + flight.flightTime()
+        templateDict['picTime'].append([date, picTimeSum])
+
+    pic = flights.filter(function = "dual")
+    for flight in pic:
+        date = int(time.mktime(flight.date.timetuple())) * 1000
+        
+        dualTimeSum = dualTimeSum + flight.flightTime()
+        templateDict['dualTime'].append([date, dualTimeSum])
+
+    datax.append(graphLand)
+    datax.append(flightTimeData)
+    datax.append(picTimeData)
     
     xdata = range(len(flights)+1)
     #xdata = map(lambda x: start_time + x * 1000000000, xdata)
@@ -221,7 +285,9 @@ def chart_nvd3(request):
         'charttype': charttype,
         'chartdata': chartdata
     }
-    return django.shortcuts.render(request,'flightlog/piechart.html', data)
+    
+    
+    return django.shortcuts.render(request,'flightlog/piechart.html', {'graphLand' : datax , 'templateDict': templateDict})
     
 @login_required
 def landings_chart(request):
@@ -363,11 +429,11 @@ def dabs(request):
         try:
             when = request.GET['when']
             if when == 'Today':
-                today = datetime.today()
+                today = datetime.datetime.today()
                 datestr = today.strftime('%Y%m%d')
                 filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-today/DABS_'+ datestr +'.pdf&embedded=true'
             else:
-                today = datetime.today() + timedelta(days=1)
+                today = datetime.datetime.today() + timedelta(days=1)
                 datestr = today.strftime('%Y%m%d')
                 filename = 'http://docs.google.com/gview?url=http://www.skyguide.ch/fileadmin/dabs-tomorrow/DABS_'+ datestr +'.pdf&embedded=true'
     
