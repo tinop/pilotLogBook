@@ -217,11 +217,25 @@ def chart_nvd3(request):
     
     startTime = datetime.datetime(2012, 6, 1)
     stopTime = datetime.datetime(2013, 6, 1)
-    base = datetime.datetime.today()
-    dateList = [ int(time.mktime((base - datetime.timedelta(days=x)).timetuple()))*1000 for x in range(0,10) ]
+    
 
-    for d in dateList:
-        templateDict['flightTime'].append([d, 30])
+    #n = flights[4].date#datetime.datetime(2012, 12,31)
+    s = flights[0].date
+    n = flights.latest('date').date #datetime.datetime(2012, 1,1)
+
+    dateList = []
+    dateDict = dict()
+    for i in range((n - s).days + 1):
+      d = (s+datetime.timedelta(days = i))
+      dateList.append( int(time.mktime(d.timetuple()))*1000 )
+      dateDict[ int(time.mktime(d.timetuple()))*1000] = 0
+      #print (s+datetime.timedelta(days = i)).date()
+    
+    base = datetime.datetime.today()
+    #dateList = [ int(time.mktime((base - datetime.timedelta(days=x)).timetuple()))*1000 for x in range(0,10) ]
+
+    #for d in dateList:
+        #templateDict['flightTime'].append([d, 0])
 
     for flight in flights:
         date = int(time.mktime(flight.date.timetuple())) * 1000
@@ -234,8 +248,12 @@ def chart_nvd3(request):
     
         totTimeSum = totTimeSum + flight.flightTime()
         templateDict['totTime'].append([date, totTimeSum])
-        templateDict['flightTime'].append([date, flight.flightTime()])
-
+        dateDict[date] = flight.flightTime()
+        #templateDict['flightTime'].append([date, flight.flightTime()])
+    
+    for k, v in dateDict.iteritems():
+        templateDict['flightTime'].append([k, v])
+        
     pic = flights.filter(function = "pic")
     for flight in pic:
         date = int(time.mktime(flight.date.timetuple())) * 1000
