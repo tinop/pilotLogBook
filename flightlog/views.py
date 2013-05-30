@@ -14,12 +14,13 @@ import csv
 import time
 import datetime
 import random
+from itertools import groupby
 
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-import pdb;
+
 
 
 def sumFlights(flights):
@@ -167,11 +168,71 @@ def chart(request):
             
     return django.shortcuts.render(request, 'flightlog/chart.html', {'chart_data' : flightData })
 
+def extract_days(entity):
+    'extracts the starting date from an entity'
+    return entity.date
+
+def extract_months(entity):
+    'extracts the starting date from an entity'
+    return entity.date.isoformat()[:7]
+
+def extract_years(entity):
+    'extracts the starting date from an entity'
+    return entity.date.isoformat()[:4]
+
 @login_required
 def chart_nvd3(request):
   
     flights = M.Flight.objects.filter(owner=request.user).order_by('date')
-  
+    import pdb;pdb.set_trace()
+    
+    
+    # Collect stats per day
+    landingsPerDay = []
+    timesPerDay = []
+    days = []
+    for flight_date, group in groupby(flights, key=extract_days):
+        days.append(flight_date)
+        #dayStat.append([flight_date, list(group)])
+        print 'flight ', flight_date
+        for element in list(group):
+            landingsPerDay.append(element.landings)      # Store group iterator as a list
+            timesPerDay.append(element.flightTime())
+            print '   landings:', element.landings, '  flightTime:', element.flightTime()
+
+
+    import pdb;pdb.set_trace()
+    
+                
+    # Collect stats per month
+    landingsPerMonth = []
+    timesPerMonth = []
+    months= []
+    for flight_date, group in groupby(flights, key=extract_months):
+        months.append(flight_date)
+        #dayStat.append([flight_date, list(group)])
+        print 'flight ', flight_date
+        for element in list(group):
+            landingsPerMonth.append(element.landings)      # Store group iterator as a list
+            timesPerMonth.append(element.flightTime())
+            print '   landings:', element.landings, '  flightTime:', element.flightTime()
+
+    # Collect stats per year
+    landingsPerYear = []
+    timesPerYear = []
+    years = []
+    for flight_date, group in groupby(flights, key=extract_years):
+        years.append(flight_date)
+        #dayStat.append([flight_date, list(group)])
+        print 'flight ', flight_date
+        for element in list(group):
+            landingsPerYear.append(element.landings)      # Store group iterator as a list
+            timesPerYear.append(element.flightTime())
+            print '   landings:', element.landings, '  flightTime:', element.flightTime()
+    
+
+    list_of_lists = [list(g) for t, g in groupby(flights, key=extract_months)]
+    import pdb;pdb.set_trace()
   
     """
     linewithfocuschart page
