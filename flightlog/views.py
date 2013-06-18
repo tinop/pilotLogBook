@@ -4,7 +4,7 @@ import django.shortcuts
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import flightlog.models as M
-import utilities
+from flightlog import utilities
 from datetime import date, timedelta, datetime, time
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
@@ -91,7 +91,7 @@ def flightlog(request):
     user_profile = request.user.account
     expireData = user_profile.expireData
     #expireData = date.today()
-    print expireData
+    print(expireData)
     
     sort = request.GET.get('sort')
     page = request.GET.get('page')
@@ -184,55 +184,55 @@ def extract_years(entity):
 def chart_nvd3(request):
   
     flights = M.Flight.objects.filter(owner=request.user).order_by('date')
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     
     
     # Collect stats per day
     landingsPerDay = []
     timesPerDay = []
     days = []
-    for flight_date, group in groupby(flights, key=extract_days):
+    for flight_date, flightsPerDate in groupby(flights, key=extract_days):
         days.append(flight_date)
         #dayStat.append([flight_date, list(group)])
-        print 'flight ', flight_date
-        for element in list(group):
+        print('flight ', flight_date)
+        for element in list(flightsPerDate):
             landingsPerDay.append(element.landings)      # Store group iterator as a list
             timesPerDay.append(element.flightTime())
-            print '   landings:', element.landings, '  flightTime:', element.flightTime()
+            print('   landings:', element.landings, '  flightTime:', element.flightTime())
 
 
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     
                 
     # Collect stats per month
     landingsPerMonth = []
     timesPerMonth = []
     months= []
-    for flight_date, group in groupby(flights, key=extract_months):
+    for flight_date, flightsPerDate in groupby(flights, key=extract_months):
         months.append(flight_date)
         #dayStat.append([flight_date, list(group)])
-        print 'flight ', flight_date
-        for element in list(group):
+        print('flight ', flight_date)
+        for element in list(flightsPerDate):
             landingsPerMonth.append(element.landings)      # Store group iterator as a list
             timesPerMonth.append(element.flightTime())
-            print '   landings:', element.landings, '  flightTime:', element.flightTime()
+            print('   landings:', element.landings, '  flightTime:', element.flightTime())
 
     # Collect stats per year
     landingsPerYear = []
     timesPerYear = []
     years = []
-    for flight_date, group in groupby(flights, key=extract_years):
+    for flight_date, flightsPerDate in groupby(flights, key=extract_years):
         years.append(flight_date)
         #dayStat.append([flight_date, list(group)])
-        print 'flight ', flight_date
-        for element in list(group):
+        print('flight ', flight_date)
+        for element in list(flightsPerDate):
             landingsPerYear.append(element.landings)      # Store group iterator as a list
             timesPerYear.append(element.flightTime())
-            print '   landings:', element.landings, '  flightTime:', element.flightTime()
+            print('   landings:', element.landings, '  flightTime:', element.flightTime())
     
 
     list_of_lists = [list(g) for t, g in groupby(flights, key=extract_months)]
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
   
     """
     linewithfocuschart page
@@ -312,7 +312,7 @@ def chart_nvd3(request):
         dateDict[date] = flight.flightTime()
         #templateDict['flightTime'].append([date, flight.flightTime()])
     
-    for k, v in dateDict.iteritems():
+    for k, v in dateDict.items():
         templateDict['flightTime'].append([k, v])
         
     pic = flights.filter(function = "pic")
@@ -365,7 +365,6 @@ def chart_nvd3(request):
         'chartdata': chartdata
     }
     
-    
     return django.shortcuts.render(request,'flightlog/piechart.html', {'graphLand' : datax , 'templateDict': templateDict})
     
 @login_required
@@ -393,11 +392,11 @@ def landings_chart(request):
     #csv for chart3 / landings_evoltion
     
     landingsSum = 0
-    with open('flightlog/static/chart/landings.csv', 'wb') as csvfile:
+    with open('flightlog/static/chart/landings.csv', 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',',
                             quotechar='|', quoting=csv.QUOTE_NONE)
         
-        spamwriter.writerow(['date'] + ['price'])
+        spamwriter.writerow(['date','price'])
         for flight in flights:
             landingsSum += flight.landings
             spamwriter.writerow([flight.date.strftime('%d %m %Y')] + [landingsSum])
